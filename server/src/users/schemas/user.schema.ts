@@ -13,6 +13,12 @@ export enum AttendanceStatus {
   OUT = '퇴근',
 }
 
+// 대표(head-admin) 전용 부재 상태 — 결재 절차 없이 직접 설정
+export enum AbsenceStatus {
+  VACATION = '휴가',
+  ABSENT = '부재',
+}
+
 @Schema({ timestamps: true })
 export class User {
   @Prop({ required: true, unique: true })
@@ -35,6 +41,10 @@ export class User {
 
   @Prop({ type: String, enum: AttendanceStatus, default: AttendanceStatus.OUT })
   status: AttendanceStatus; // 출퇴근 상태
+
+  // 대표 전용 부재 표시 (head-admin은 법적 근로자가 아니므로 결재 없이 직접 토글)
+  @Prop({ type: String, enum: [...Object.values(AbsenceStatus), null], default: null })
+  absenceStatus: AbsenceStatus | null;
 
   @Prop({ default: true })
   isActive: boolean;
@@ -62,6 +72,14 @@ export class User {
   @Prop({ type: Date, default: null })
   birthDate: Date | null;
 
+  // 입사일 — 근로기준법 60조에 따른 연차 자동 계산 기준
+  @Prop({ type: Date, default: null })
+  hireDate: Date | null;
+
+  // 연차 수동 보정 (관리자만 조정 가능; 이월·특별휴가·기존 사용분 반영용)
+  @Prop({ type: Number, default: 0 })
+  annualLeaveAdjustment: number;
+
   // 비상연락처
   @Prop({
     type: { name: String, phone: String, relation: String },
@@ -69,6 +87,25 @@ export class User {
     _id: false,
   })
   emergencyContact: { name: string; phone: string; relation: string };
+
+  // 대시보드 커스텀 레이아웃 — react-grid-layout 형식
+  // [{ i: 'widgetId', x, y, w, h, hidden? }]
+  @Prop({ type: [Object], default: [] })
+  dashboardLayout: Array<{
+    i: string;
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    hidden?: boolean;
+  }>;
+
+  // 온라인 결재 도장
+  @Prop({ type: String, default: null })
+  stampSvg: string | null; // SVG 문자열 또는 data URL
+
+  @Prop({ type: String, default: '#e11d48' })
+  stampColor: string; // 도장 글자 색 (빨강/파랑/검정)
 
   // timestamps: true 가 자동 생성하는 필드 — TypeScript 타입 인식을 위해 반드시 명시
   createdAt: Date;

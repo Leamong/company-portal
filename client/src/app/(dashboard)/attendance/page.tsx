@@ -19,11 +19,6 @@ const mockTeam = [
   { id: '8', name: '임재원', position: '사원', department: 'design', status: '결근' as const, checkIn: '-', workHours: '-' },
 ];
 
-const mockPendingLeave = [
-  { id: '1', name: '이서연', type: '연차', date: '4/18(금)', reason: '개인 사유' },
-  { id: '2', name: '강도현', type: '반차(오후)', date: '4/17(목)', reason: '병원 방문' },
-];
-
 const mockPendingCorrection = [
   { id: '1', name: '박지훈', date: '4/14(월)', original: '미기록', requested: '09:05 출근', reason: '기기 오류' },
 ];
@@ -82,7 +77,7 @@ function CheckInCard({
 
   if (compact) {
     return (
-      <div className='bg-white rounded-2xl border border-gray-100 p-4 flex items-center gap-4'>
+      <div className='bg-white rounded-md border border-gray-100 p-4 flex items-center gap-4'>
         <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0
           ${status === '출근' ? 'bg-green-50 ring-2 ring-green-200' : 'bg-gray-50 ring-2 ring-gray-200'}`}>
           <span className={`w-2.5 h-2.5 rounded-full ${status === '출근' ? 'bg-green-500' : 'bg-gray-300'}`} />
@@ -99,7 +94,7 @@ function CheckInCard({
         <button
           onClick={onToggle}
           disabled={loading}
-          className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+          className={`shrink-0 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
             status === '퇴근'
               ? 'bg-blue-600 hover:bg-blue-700 text-white'
               : 'bg-red-50 hover:bg-red-100 text-red-600 border border-red-200'
@@ -112,7 +107,7 @@ function CheckInCard({
   }
 
   return (
-    <div className='bg-white rounded-2xl border border-gray-100 p-6 flex flex-col items-center gap-5'>
+    <div className='bg-white rounded-md border border-gray-100 p-6 flex flex-col items-center gap-5'>
       <div className={`relative w-28 h-28 rounded-full flex items-center justify-center
         ${status === '출근' ? 'bg-green-50 ring-4 ring-green-200' : 'bg-gray-50 ring-4 ring-gray-200'}`}>
         <div className='text-center'>
@@ -141,7 +136,7 @@ function CheckInCard({
       <button
         onClick={onToggle}
         disabled={loading}
-        className={`w-full py-3 rounded-xl text-sm font-semibold transition-all ${
+        className={`w-full py-3 rounded-md text-sm font-semibold transition-all ${
           status === '퇴근'
             ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-200'
             : 'bg-red-50 hover:bg-red-100 text-red-600 border border-red-200'
@@ -165,7 +160,7 @@ function StatCard({
     purple: 'text-purple-600', teal: 'text-teal-600', orange: 'text-orange-600',
   };
   return (
-    <div className='bg-white rounded-2xl border border-gray-100 p-4'>
+    <div className='bg-white rounded-md border border-gray-100 p-4'>
       <div className='flex items-center gap-2 mb-2'>
         <span className='text-lg'>{icon}</span>
         <span className='text-xs font-medium text-gray-400'>{label}</span>
@@ -241,7 +236,7 @@ function ManagerView({
           { label: '결근', value: stats.absent, color: 'text-red-600', dot: 'bg-red-500', bg: 'bg-red-50/50' },
           { label: '퇴근', value: stats.out, color: 'text-gray-400', dot: 'bg-gray-300', bg: 'bg-white' },
         ].map((s) => (
-          <div key={s.label} className={`${s.bg} rounded-2xl border border-gray-100 p-3.5`}>
+          <div key={s.label} className={`${s.bg} rounded-md border border-gray-100 p-3.5`}>
             <div className='flex items-center gap-1.5 mb-1'>
               <span className={`w-2 h-2 rounded-full ${s.dot}`} />
               <span className='text-xs text-gray-400'>{s.label}</span>
@@ -269,46 +264,9 @@ function ManagerView({
             onToggle={onToggle}
           />
 
-          {/* 휴가 승인 대기 */}
-          <div className='bg-white rounded-2xl border border-gray-100 overflow-hidden'>
-            <div className='px-4 py-3 border-b border-gray-50 flex items-center justify-between'>
-              <div className='flex items-center gap-2'>
-                <span className='text-sm font-semibold text-gray-800'>휴가 승인 대기</span>
-                {mockPendingLeave.length > 0 && (
-                  <span className='text-xs bg-orange-100 text-orange-600 font-semibold px-1.5 py-0.5 rounded-full'>
-                    {mockPendingLeave.length}
-                  </span>
-                )}
-              </div>
-              <Link href='/approval' className='text-xs text-blue-600 hover:text-blue-700 font-medium'>
-                결재함 →
-              </Link>
-            </div>
-            {mockPendingLeave.length === 0 ? (
-              <div className='px-4 py-6 text-center text-xs text-gray-300'>대기 중인 요청이 없습니다</div>
-            ) : (
-              <div className='divide-y divide-gray-50'>
-                {mockPendingLeave.map((req) => (
-                  <div key={req.id} className='px-4 py-3 flex items-center gap-3'>
-                    <div className='w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center shrink-0'>
-                      <span className='text-xs font-semibold text-blue-600'>{req.name.charAt(0)}</span>
-                    </div>
-                    <div className='flex-1 min-w-0'>
-                      <p className='text-xs font-medium text-gray-700'>{req.name} · <span className='text-blue-600'>{req.type}</span></p>
-                      <p className='text-xs text-gray-400'>{req.date} · {req.reason}</p>
-                    </div>
-                    <div className='flex gap-1.5 shrink-0'>
-                      <button className='text-[11px] px-2 py-1 rounded-lg bg-green-100 text-green-700 font-medium hover:bg-green-200 transition-colors'>승인</button>
-                      <button className='text-[11px] px-2 py-1 rounded-lg bg-gray-100 text-gray-500 font-medium hover:bg-gray-200 transition-colors'>반려</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
 
           {/* 근태 수정 요청 */}
-          <div className='bg-white rounded-2xl border border-gray-100 overflow-hidden'>
+          <div className='bg-white rounded-md border border-gray-100 overflow-hidden'>
             <div className='px-4 py-3 border-b border-gray-50 flex items-center justify-between'>
               <div className='flex items-center gap-2'>
                 <span className='text-sm font-semibold text-gray-800'>근태 수정 요청</span>
@@ -328,8 +286,8 @@ function ManagerView({
                     <div className='flex items-center justify-between mb-1'>
                       <span className='text-xs font-medium text-gray-700'>{req.name} · {req.date}</span>
                       <div className='flex gap-1.5'>
-                        <button className='text-[11px] px-2 py-1 rounded-lg bg-green-100 text-green-700 font-medium hover:bg-green-200 transition-colors'>승인</button>
-                        <button className='text-[11px] px-2 py-1 rounded-lg bg-gray-100 text-gray-500 font-medium hover:bg-gray-200 transition-colors'>반려</button>
+                        <button className='text-[11px] px-2 py-1 rounded-md bg-green-100 text-green-700 font-medium hover:bg-green-200 transition-colors'>승인</button>
+                        <button className='text-[11px] px-2 py-1 rounded-md bg-gray-100 text-gray-500 font-medium hover:bg-gray-200 transition-colors'>반려</button>
                       </div>
                     </div>
                     <p className='text-[11px] text-gray-400'>
@@ -355,7 +313,7 @@ function ManagerView({
               <Link
                 key={item.href}
                 href={item.href}
-                className='bg-white rounded-xl border border-gray-100 p-3 flex items-center gap-2.5 hover:border-blue-200 hover:shadow-sm transition-all group'
+                className='bg-white rounded-md border border-gray-100 p-3 flex items-center gap-2.5 hover:border-blue-200 hover:shadow-sm transition-all group'
               >
                 <span className='text-base'>{item.icon}</span>
                 <span className='text-xs font-medium text-gray-700 group-hover:text-blue-600 transition-colors'>{item.label}</span>
@@ -365,7 +323,7 @@ function ManagerView({
         </div>
 
         {/* 오른쪽: 실시간 팀 현황 */}
-        <div className='lg:col-span-2 bg-white rounded-2xl border border-gray-100 overflow-hidden'>
+        <div className='lg:col-span-2 bg-white rounded-md border border-gray-100 overflow-hidden'>
           <div className='px-5 py-3.5 border-b border-gray-100 flex items-center justify-between'>
             <h2 className='text-sm font-semibold text-gray-800'>오늘 팀 현황</h2>
             <div className='flex items-center gap-1'>
@@ -373,7 +331,7 @@ function ManagerView({
                 <button
                   key={d.key}
                   onClick={() => setDeptFilter(d.key)}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
                     deptFilter === d.key ? 'bg-blue-600 text-white' : 'text-gray-500 hover:bg-gray-100'
                   }`}
                 >
@@ -510,23 +468,19 @@ function EmployeeView({
           <StatCard icon='⏱' label='총 근무시간' value='126' unit='h' sub='이번 달' color='green' />
           <StatCard icon='🕐' label='초과 근무' value='8' unit='h' sub='이번 달' color='purple' />
           <StatCard icon='⚠️' label='지각' value='1' unit='회' sub='이번 달' color='yellow' />
-          <StatCard icon='🌴' label='잔여 연차' value='12' unit='일' sub='/ 15일' color='teal' />
-          <StatCard icon='📋' label='결재 대기' value='2' unit='건' sub='휴가/연장' color='orange' />
         </div>
       </div>
 
       {/* 빠른 메뉴 */}
-      <div className='grid grid-cols-2 sm:grid-cols-4 gap-3'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
         {[
           { href: '/attendance/history', icon: '📊', label: '근무 기록', desc: '월별 출퇴근 내역' },
-          { href: '/attendance/leave', icon: '🌴', label: '휴가 신청', desc: '연차 · 반차 신청' },
-          { href: '/attendance/overtime', icon: '⏰', label: '연장근무 신청', desc: '시간외 근무 기안' },
           { href: '/approval', icon: '📝', label: '결재함', desc: '진행 중인 결재' },
         ].map((item) => (
           <Link
             key={item.href}
             href={item.href}
-            className='bg-white rounded-2xl border border-gray-100 p-4 hover:border-blue-200 hover:shadow-sm transition-all group'
+            className='bg-white rounded-md border border-gray-100 p-4 hover:border-blue-200 hover:shadow-sm transition-all group'
           >
             <div className='text-2xl mb-2'>{item.icon}</div>
             <p className='text-sm font-semibold text-gray-800 group-hover:text-blue-600 transition-colors'>{item.label}</p>
@@ -536,7 +490,7 @@ function EmployeeView({
       </div>
 
       {/* 이번 주 내 근무 */}
-      <div className='bg-white rounded-2xl border border-gray-100 overflow-hidden'>
+      <div className='bg-white rounded-md border border-gray-100 overflow-hidden'>
         <div className='px-5 py-4 border-b border-gray-50 flex items-center justify-between'>
           <h2 className='text-sm font-semibold text-gray-800'>이번 주 내 근무</h2>
           <Link href='/attendance/history' className='text-xs text-blue-600 hover:text-blue-700 font-medium'>
@@ -584,34 +538,6 @@ function EmployeeView({
         </div>
       </div>
 
-      {/* 이번 달 결재 현황 */}
-      <div className='bg-white rounded-2xl border border-gray-100 overflow-hidden'>
-        <div className='px-5 py-4 border-b border-gray-50'>
-          <h2 className='text-sm font-semibold text-gray-800'>이번 달 신청 현황</h2>
-        </div>
-        <div className='divide-y divide-gray-50'>
-          {[
-            { type: '연차', date: '4/10(목)', status: '승인', statusColor: 'bg-green-100 text-green-700' },
-            { type: '연장근무', date: '4/12(토)', status: '승인', statusColor: 'bg-green-100 text-green-700' },
-            { type: '반차(오후)', date: '4/18(금)', status: '대기', statusColor: 'bg-orange-100 text-orange-600' },
-          ].map((item, i) => (
-            <div key={i} className='flex items-center gap-3 px-5 py-3'>
-              <div className='flex-1'>
-                <p className='text-sm text-gray-700 font-medium'>{item.type}</p>
-                <p className='text-xs text-gray-400'>{item.date}</p>
-              </div>
-              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${item.statusColor}`}>
-                {item.status}
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className='px-5 py-3 border-t border-gray-50'>
-          <Link href='/approval' className='text-xs text-blue-600 hover:text-blue-700 font-medium'>
-            전체 결재 내역 →
-          </Link>
-        </div>
-      </div>
     </div>
   );
 }

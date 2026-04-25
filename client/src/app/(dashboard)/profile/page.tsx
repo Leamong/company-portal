@@ -117,7 +117,7 @@ export default function ProfilePage() {
 
       {/* 피드백 메시지 */}
       {successMsg && (
-        <div className='mb-4 px-4 py-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-sm flex items-center gap-2'>
+        <div className='mb-4 px-4 py-3 rounded-md bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-sm flex items-center gap-2'>
           <svg className='w-4 h-4 shrink-0' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
             <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M5 13l4 4L19 7' />
           </svg>
@@ -125,7 +125,7 @@ export default function ProfilePage() {
         </div>
       )}
       {errorMsg && (
-        <div className='mb-4 px-4 py-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm flex items-center gap-2'>
+        <div className='mb-4 px-4 py-3 rounded-md bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm flex items-center gap-2'>
           <svg className='w-4 h-4 shrink-0' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
             <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
           </svg>
@@ -133,7 +133,7 @@ export default function ProfilePage() {
         </div>
       )}
 
-      <div className='bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden'>
+      <div className='bg-white dark:bg-gray-800 rounded-md shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden'>
         {/* 프로필 사진 섹션 */}
         <div className='px-6 py-6 border-b border-gray-100 dark:border-gray-700 flex items-center gap-5'>
           <div className='relative'>
@@ -165,7 +165,7 @@ export default function ProfilePage() {
                 type='button'
                 onClick={() => fileInputRef.current?.click()}
                 disabled={avatarUploading}
-                className='text-sm px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors disabled:opacity-50'
+                className='text-sm px-3 py-1.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors disabled:opacity-50'
               >
                 사진 변경
               </button>
@@ -181,7 +181,7 @@ export default function ProfilePage() {
                       showError('사진 삭제에 실패했습니다.');
                     }
                   }}
-                  className='text-sm px-3 py-1.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors'
+                  className='text-sm px-3 py-1.5 rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors'
                 >
                   삭제
                 </button>
@@ -228,7 +228,7 @@ export default function ProfilePage() {
               type='text'
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className='w-40 px-3.5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition'
+              className='w-40 px-3.5 py-2.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition'
               placeholder='이름을 입력하세요'
             />
           </div>
@@ -242,7 +242,7 @@ export default function ProfilePage() {
               type='tel'
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className='w-44 px-3.5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition'
+              className='w-44 px-3.5 py-2.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition'
               placeholder='010-0000-0000'
             />
           </div>
@@ -265,7 +265,7 @@ export default function ProfilePage() {
                   if (val.length === 4) monthRef.current?.focus();
                 }}
                 placeholder='YYYY'
-                className='w-20 px-2 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-center'
+                className='w-20 px-2 py-2.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-center'
               />
               <span className='text-gray-400 text-sm'>/</span>
               {/* MM */}
@@ -287,7 +287,7 @@ export default function ProfilePage() {
                   if (val.length === 1 && val !== '0') setBirthMonth(val.padStart(2, '0'));
                 }}
                 placeholder='MM'
-                className='w-14 px-2 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-center'
+                className='w-14 px-2 py-2.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-center'
               />
               <span className='text-gray-400 text-sm'>/</span>
               {/* DD */}
@@ -309,7 +309,7 @@ export default function ProfilePage() {
                     if (val.length === 1 && val !== '0') setBirthDay(val.padStart(2, '0'));
                   }}
                   placeholder='DD'
-                  className='w-14 px-2 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-center'
+                  className='w-14 px-2 py-2.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-center'
                 />
               </div>
             </div>
@@ -323,7 +323,7 @@ export default function ProfilePage() {
             onClick={handleSave}
             disabled={saving}
             className={cn(
-              'px-5 py-2.5 rounded-lg text-sm font-medium transition-colors',
+              'px-5 py-2.5 rounded-md text-sm font-medium transition-colors',
               saving
                 ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 cursor-not-allowed'
                 : 'bg-blue-600 hover:bg-blue-700 text-white',

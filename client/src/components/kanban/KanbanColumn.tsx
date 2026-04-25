@@ -87,7 +87,7 @@ export default function KanbanColumn({
         {column.key === '상담중' && isAdmin && onAddCard && (
           <button
             onClick={onAddCard}
-            className="w-full py-2 rounded-lg border border-dashed border-gray-200 text-xs text-gray-400 hover:border-indigo-300 hover:text-indigo-500 hover:bg-indigo-50/50 transition-colors flex items-center justify-center gap-1"
+            className="w-full py-2 rounded-md border border-dashed border-gray-200 text-xs text-gray-400 hover:border-indigo-300 hover:text-indigo-500 hover:bg-indigo-50/50 transition-colors flex items-center justify-center gap-1"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

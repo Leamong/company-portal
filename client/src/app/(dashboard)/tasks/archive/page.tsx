@@ -3,10 +3,13 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
 import api from '@/lib/api';
+import { formatDateShort } from '@/lib/utils';
 import { type Task } from '@/components/kanban/types';
 
 type DeptFilter = 'all' | 'marketing' | 'design';
 type GroupMode = 'period' | 'assignee';
+
+type QuickRange = 'this-month' | 'last-month' | '3months' | 'this-year' | '';
 
 // ─── 이미지 삭제까지 남은 일수 ────────────────────────────────────────────────
 function daysUntilDelete(archivedAt?: string | null): number | null {
@@ -45,7 +48,7 @@ function ImageBadge({ task }: { task: Task }) {
 // ─── 단일 행 카드 ─────────────────────────────────────────────────────────────
 function ArchiveRow({ task }: { task: Task }) {
   return (
-    <div className='flex items-center gap-3 px-4 py-3 bg-white rounded-xl border border-gray-100 hover:border-emerald-200 hover:shadow-sm transition-all group'>
+    <div className='flex items-center gap-3 px-4 py-3 bg-white rounded-md border border-gray-100 hover:border-emerald-200 hover:shadow-sm transition-all group'>
       {/* 완료 아이콘 */}
       <div className='w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0'>
         <svg className='w-3 h-3 text-emerald-600' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
@@ -86,7 +89,7 @@ function ArchiveRow({ task }: { task: Task }) {
 
       {/* 보관일 */}
       <span className='text-xs text-gray-300 shrink-0 hidden xl:block w-16 text-right'>
-        {task.archivedAt ? dayjs(task.archivedAt).format('MM.DD') + ' 보관' : ''}
+        {task.archivedAt ? dayjs(task.archivedAt).format('MM/DD') + ' 보관' : ''}
       </span>
     </div>
   );
@@ -145,13 +148,13 @@ function PeriodView({ tasks }: { tasks: Task[] }) {
         const isYearOpen = openYears.has(year);
 
         return (
-          <div key={year} className='rounded-2xl border border-gray-100 overflow-hidden bg-gray-50'>
+          <div key={year} className='rounded-md border border-gray-100 overflow-hidden bg-gray-50'>
             {/* 연도 헤더 */}
             <button
               onClick={() => toggleYear(year)}
               className='w-full flex items-center gap-3 px-5 py-3.5 hover:bg-gray-100 transition-colors'
             >
-              <div className='w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center shrink-0'>
+              <div className='w-8 h-8 rounded-md bg-indigo-600 flex items-center justify-center shrink-0'>
                 <span className='text-white text-xs font-bold'>{year.slice(2)}</span>
               </div>
               <span className='text-sm font-bold text-gray-800 flex-1 text-left'>{year}년</span>
@@ -265,11 +268,11 @@ function AssigneeView({ tasks }: { tasks: Task[] }) {
 
         // 가장 최근 보관일
         const latestDate = personTasks[0]?.archivedAt
-          ? dayjs(personTasks[0].archivedAt).format('YYYY.MM.DD')
+          ? formatDateShort(personTasks[0].archivedAt)
           : '';
 
         return (
-          <div key={name} className='rounded-2xl border border-gray-100 overflow-hidden'>
+          <div key={name} className='rounded-md border border-gray-100 overflow-hidden'>
             {/* 담당자 헤더 */}
             <button
               onClick={() => toggle(name)}
@@ -349,6 +352,34 @@ export default function ArchivePage() {
   const [deptFilter, setDeptFilter] = useState<DeptFilter>('all');
   const [designFilter, setDesignFilter] = useState('');
   const [groupMode, setGroupMode] = useState<GroupMode>('period');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+  const [quickRange, setQuickRange] = useState<QuickRange>('');
+  const [showDateFilter, setShowDateFilter] = useState(false);
+
+  const applyQuick = (range: QuickRange) => {
+    setQuickRange(range);
+    const now = dayjs();
+    if (range === 'this-month') {
+      setDateFrom(now.startOf('month').format('YYYY-MM-DD'));
+      setDateTo(now.endOf('month').format('YYYY-MM-DD'));
+    } else if (range === 'last-month') {
+      const last = now.subtract(1, 'month');
+      setDateFrom(last.startOf('month').format('YYYY-MM-DD'));
+      setDateTo(last.endOf('month').format('YYYY-MM-DD'));
+    } else if (range === '3months') {
+      setDateFrom(now.subtract(3, 'month').startOf('month').format('YYYY-MM-DD'));
+      setDateTo(now.endOf('month').format('YYYY-MM-DD'));
+    } else if (range === 'this-year') {
+      setDateFrom(now.startOf('year').format('YYYY-MM-DD'));
+      setDateTo(now.endOf('year').format('YYYY-MM-DD'));
+    } else {
+      setDateFrom('');
+      setDateTo('');
+    }
+  };
+
+  const clearDate = () => { setDateFrom(''); setDateTo(''); setQuickRange(''); };
 
   const fetchArchived = useCallback(async () => {
     setLoading(true);
@@ -369,14 +400,17 @@ export default function ArchivePage() {
 
   const filtered = useMemo(() =>
     tasks.filter((t) => {
-      if (!search) return true;
-      return (
+      if (search && !(
         t.title.includes(search) ||
         t.client.includes(search) ||
         t.assigneeName.includes(search)
-      );
+      )) return false;
+      const archived = t.archivedAt ?? t.dueDate ?? '';
+      if (dateFrom && archived < dateFrom) return false;
+      if (dateTo && archived > dateTo) return false;
+      return true;
     }),
-    [tasks, search],
+    [tasks, search, dateFrom, dateTo],
   );
 
   // 통계
@@ -409,11 +443,11 @@ export default function ArchivePage() {
         </div>
 
         {/* 그룹 모드 탭 */}
-        <div className='flex items-center gap-0.5 bg-gray-100 rounded-xl p-1 shrink-0'>
+        <div className='flex items-center gap-0.5 bg-gray-100 rounded-md p-1 shrink-0'>
           <button
             onClick={() => setGroupMode('period')}
             className={[
-              'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap',
+              'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all whitespace-nowrap',
               groupMode === 'period'
                 ? 'bg-white text-indigo-700 shadow-sm font-semibold'
                 : 'text-gray-500 hover:text-gray-700',
@@ -427,7 +461,7 @@ export default function ArchivePage() {
           <button
             onClick={() => setGroupMode('assignee')}
             className={[
-              'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap',
+              'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all whitespace-nowrap',
               groupMode === 'assignee'
                 ? 'bg-white text-indigo-700 shadow-sm font-semibold'
                 : 'text-gray-500 hover:text-gray-700',
@@ -447,7 +481,7 @@ export default function ArchivePage() {
         <StatCard label='마케팅팀' value={stats.marketing} unit='건' color='blue' />
         <StatCard label='디자인팀' value={stats.design} unit='건' color='violet' />
         {stats.topAssignee ? (
-          <div className='bg-white rounded-xl border border-gray-100 px-4 py-3'>
+          <div className='bg-white rounded-md border border-gray-100 px-4 py-3'>
             <p className='text-xs text-gray-400 mb-1'>최다 완료</p>
             <p className='text-sm font-bold text-gray-800 truncate'>{stats.topAssignee[0]}</p>
             <p className='text-xs text-gray-500 mt-0.5'>{stats.topAssignee[1]}건</p>
@@ -458,7 +492,7 @@ export default function ArchivePage() {
       </div>
 
       {/* ── 안내 배너 ── */}
-      <div className='flex items-center gap-2.5 px-4 py-2.5 bg-amber-50 border border-amber-100 rounded-xl text-xs text-amber-700 shrink-0'>
+      <div className='flex items-center gap-2.5 px-4 py-2.5 bg-amber-50 border border-amber-100 rounded-md text-xs text-amber-700 shrink-0'>
         <svg className='w-4 h-4 text-amber-500 shrink-0' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
           <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
         </svg>
@@ -468,50 +502,150 @@ export default function ArchivePage() {
       </div>
 
       {/* ── 필터 바 ── */}
-      <div className='flex items-center gap-2 flex-wrap shrink-0'>
-        {/* 검색 */}
-        <div className='relative flex-1 min-w-48'>
-          <svg className='absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' />
-          </svg>
-          <input
-            type='text'
-            placeholder='제목, 고객사, 담당자 검색...'
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className='w-full pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white'
-          />
-        </div>
+      <div className='space-y-2 shrink-0'>
+        {/* 1행: 검색 + 부서 + 종류 + 날짜토글 */}
+        <div className='flex items-center gap-2 flex-wrap'>
+          {/* 텍스트 검색 */}
+          <div className='relative flex-1 min-w-44'>
+            <svg className='absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' />
+            </svg>
+            <input
+              type='text'
+              placeholder='제목, 고객사, 담당자 검색...'
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className='w-full pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white'
+            />
+          </div>
 
-        {/* 부서 필터 */}
-        {(['all', 'marketing', 'design'] as const).map((d) => (
+          {/* 부서 */}
+          {(['all', 'marketing', 'design'] as const).map((d) => (
+            <button
+              key={d}
+              onClick={() => setDeptFilter(d)}
+              className={[
+                'px-3 py-1.5 rounded-md text-xs font-medium transition-colors whitespace-nowrap',
+                deptFilter === d ? 'bg-indigo-600 text-white' : 'text-gray-500 border border-gray-200 hover:bg-gray-50',
+              ].join(' ')}
+            >
+              {d === 'all' ? '전체' : d === 'marketing' ? '마케팅팀' : '디자인팀'}
+            </button>
+          ))}
+
+          {/* 디자인 종류 */}
+          <select
+            value={designFilter}
+            onChange={(e) => setDesignFilter(e.target.value)}
+            className='text-xs border border-gray-200 rounded-md px-2.5 py-1.5 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white'
+          >
+            <option value=''>종류 전체</option>
+            {['배너', '로고', 'SNS', '카탈로그', '인쇄물', '기타'].map((d) => (
+              <option key={d} value={d}>{d}</option>
+            ))}
+          </select>
+
+          {/* 날짜 필터 토글 */}
           <button
-            key={d}
-            onClick={() => setDeptFilter(d)}
+            onClick={() => setShowDateFilter((p) => !p)}
             className={[
-              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap',
-              deptFilter === d
-                ? 'bg-indigo-600 text-white'
-                : 'text-gray-500 border border-gray-200 hover:bg-gray-50',
+              'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors whitespace-nowrap border',
+              showDateFilter || dateFrom || dateTo
+                ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                : 'text-gray-500 border-gray-200 hover:bg-gray-50',
             ].join(' ')}
           >
-            {d === 'all' ? '전체' : d === 'marketing' ? '마케팅팀' : '디자인팀'}
+            <svg className='w-3.5 h-3.5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' />
+            </svg>
+            날짜 검색
+            {(dateFrom || dateTo) && (
+              <span className='w-1.5 h-1.5 rounded-full bg-indigo-500' />
+            )}
           </button>
-        ))}
 
-        {/* 디자인 종류 */}
-        <select
-          value={designFilter}
-          onChange={(e) => setDesignFilter(e.target.value)}
-          className='text-xs border border-gray-200 rounded-lg px-2.5 py-1.5 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white'
-        >
-          <option value=''>종류 전체</option>
-          {['배너', '로고', 'SNS', '카탈로그', '인쇄물', '기타'].map((d) => (
-            <option key={d} value={d}>{d}</option>
-          ))}
-        </select>
+          <span className='ml-auto text-xs text-gray-400 shrink-0'>{filtered.length}건</span>
+        </div>
 
-        <span className='ml-auto text-xs text-gray-400 shrink-0'>{filtered.length}건</span>
+        {/* 2행: 날짜 필터 (펼침) */}
+        {showDateFilter && (
+          <div className='bg-gray-50 border border-gray-100 rounded-md px-4 py-3 space-y-3'>
+            {/* 퀵 선택 */}
+            <div className='flex items-center gap-2 flex-wrap'>
+              <span className='text-[11px] text-gray-400 font-medium shrink-0'>빠른 선택</span>
+              {([
+                { key: 'this-month', label: '이번 달' },
+                { key: 'last-month', label: '지난 달' },
+                { key: '3months',    label: '최근 3개월' },
+                { key: 'this-year',  label: '올해' },
+              ] as { key: QuickRange; label: string }[]).map(({ key, label }) => (
+                <button
+                  key={key}
+                  onClick={() => applyQuick(quickRange === key ? '' : key)}
+                  className={[
+                    'px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors whitespace-nowrap',
+                    quickRange === key
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-white border border-gray-200 text-gray-600 hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-700',
+                  ].join(' ')}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {/* 월 선택 */}
+            <div className='flex items-center gap-2 flex-wrap'>
+              <span className='text-[11px] text-gray-400 font-medium shrink-0 w-14'>월 선택</span>
+              <input
+                type='month'
+                onChange={(e) => {
+                  if (!e.target.value) return;
+                  const m = dayjs(e.target.value);
+                  setQuickRange('');
+                  setDateFrom(m.startOf('month').format('YYYY-MM-DD'));
+                  setDateTo(m.endOf('month').format('YYYY-MM-DD'));
+                }}
+                className='border border-gray-200 rounded-md px-2.5 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white'
+              />
+              {dateFrom && dateTo && (
+                <span className='text-[11px] text-indigo-600 font-medium'>
+                  {dateFrom} ~ {dateTo}
+                </span>
+              )}
+            </div>
+
+            {/* 직접 입력 */}
+            <div className='flex items-center gap-2 flex-wrap'>
+              <span className='text-[11px] text-gray-400 font-medium shrink-0 w-14'>직접 입력</span>
+              <input
+                type='date'
+                value={dateFrom}
+                onChange={(e) => { setQuickRange(''); setDateFrom(e.target.value); }}
+                className='border border-gray-200 rounded-md px-2.5 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white'
+              />
+              <span className='text-xs text-gray-400'>~</span>
+              <input
+                type='date'
+                value={dateTo}
+                min={dateFrom}
+                onChange={(e) => { setQuickRange(''); setDateTo(e.target.value); }}
+                className='border border-gray-200 rounded-md px-2.5 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white'
+              />
+              {(dateFrom || dateTo) && (
+                <button
+                  onClick={clearDate}
+                  className='flex items-center gap-1 text-[11px] text-red-400 hover:text-red-600 transition-colors ml-1'
+                >
+                  <svg className='w-3 h-3' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M6 18L18 6M6 6l12 12' />
+                  </svg>
+                  초기화
+                </button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ── 목록 ── */}
@@ -548,7 +682,7 @@ function StatCard({
   };
 
   return (
-    <div className='bg-white rounded-xl border border-gray-100 px-4 py-3'>
+    <div className='bg-white rounded-md border border-gray-100 px-4 py-3'>
       <p className='text-xs text-gray-400 mb-1'>{label}</p>
       <div className='flex items-baseline gap-1'>
         <span className={`text-2xl font-bold ${colorMap[color].split(' ')[0]}`}>{value}</span>

@@ -118,7 +118,7 @@ export default function KanbanCard({ task, isAdmin, currentUserId, onMove, onEdi
       {...(canDrag ? { ...listeners, ...attributes } : {})}
       onClick={handleCardClick}
       className={[
-        'group relative bg-white rounded-xl border p-3.5 shadow-sm transition-all select-none',
+        'group relative bg-white rounded-md border p-3.5 shadow-sm transition-all select-none',
         canDrag ? 'cursor-grab active:cursor-grabbing' : 'cursor-default',
         canUpload ? 'ring-2 ring-violet-300 ring-offset-1 cursor-pointer' : '',
         isOverdue
@@ -181,7 +181,7 @@ export default function KanbanCard({ task, isAdmin, currentUserId, onMove, onEdi
               <div
                 ref={dropdownRef}
                 style={{ position: 'fixed', top: menuPos.top, right: menuPos.right, zIndex: 9999 }}
-                className="bg-white rounded-xl border border-gray-100 shadow-xl py-1.5 w-40 text-xs"
+                className="bg-white rounded-md border border-gray-100 shadow-xl py-1.5 w-40 text-xs"
               >
                 {moveTargets.length > 0 && (
                   <>
@@ -255,7 +255,7 @@ export default function KanbanCard({ task, isAdmin, currentUserId, onMove, onEdi
 
       {/* 컨펌대기 업로드 안내 */}
       {canUpload && (
-        <div className="mt-2 flex items-center gap-1.5 px-2.5 py-1.5 bg-violet-50 rounded-lg">
+        <div className="mt-2 flex items-center gap-1.5 px-2.5 py-1.5 bg-violet-50 rounded-md">
           <svg className="w-3.5 h-3.5 text-violet-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
           </svg>

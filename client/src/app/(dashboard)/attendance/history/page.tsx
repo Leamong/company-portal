@@ -75,7 +75,7 @@ function generateMonth(year: number, month: number): DayRecord[] {
     const ot = s === '조퇴' ? '-' : d % 3 === 0 ? '1h 5m' : '-';
     records.push({ date: dateStr, day: dayLabel, checkIn, checkOut, workHours: workH, overtime: ot, status: s });
   }
-  return records.reverse();
+  return records;
 }
 
 function buildMonthGroups(): MonthGroup[] {
@@ -108,7 +108,7 @@ function MonthAccordion({ group, defaultOpen }: { group: MonthGroup; defaultOpen
   const isPast = dayjs(`${group.year}-${group.month}`).isBefore(dayjs(), 'month');
 
   return (
-    <div className='border border-gray-100 rounded-xl overflow-hidden'>
+    <div className='border border-gray-100 rounded-md overflow-hidden'>
       <button
         type='button'
         onClick={() => setOpen((v) => !v)}
@@ -192,7 +192,7 @@ function YearSection({ year, groups, defaultOpen }: { year: number; groups: Mont
   const currentYear = dayjs().year();
 
   return (
-    <div className='bg-white rounded-2xl border border-gray-100 overflow-hidden'>
+    <div className='bg-white rounded-md border border-gray-100 overflow-hidden'>
       <button type='button' onClick={() => setOpen((v) => !v)} className='w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-50/60 transition-colors text-left'>
         <svg className={`w-4 h-4 text-gray-500 shrink-0 transition-transform duration-200 ${open ? 'rotate-90' : ''}`} fill='none' stroke='currentColor' viewBox='0 0 24 24'>
           <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2.5} d='M9 5l7 7-7 7' />
@@ -282,7 +282,7 @@ function DetailModal({ emp, onClose }: { emp: EmployeeSummary; onClose: () => vo
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40' onClick={onClose}>
-      <div className='bg-white rounded-2xl shadow-2xl w-full max-w-3xl mx-4 max-h-[80vh] flex flex-col' onClick={(e) => e.stopPropagation()}>
+      <div className='bg-white rounded-md shadow-2xl w-full max-w-3xl mx-4 max-h-[80vh] flex flex-col' onClick={(e) => e.stopPropagation()}>
         {/* 헤더 */}
         <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100'>
           <div className='flex items-center gap-3'>
@@ -383,7 +383,7 @@ function AdminHistoryView() {
           { label: '지각 건수',    value: `${totalLate}회`,        color: 'text-yellow-600', bg: 'bg-yellow-50' },
           { label: '결근 건수',    value: `${totalAbsence}일`,     color: 'text-red-600',    bg: 'bg-red-50' },
         ].map((s) => (
-          <div key={s.label} className={`rounded-2xl border border-gray-100 p-4 ${s.bg}`}>
+          <div key={s.label} className={`rounded-md border border-gray-100 p-4 ${s.bg}`}>
             <p className='text-xs text-gray-500 font-medium'>{s.label}</p>
             <p className={`text-2xl font-bold mt-1 ${s.color}`}>{s.value}</p>
           </div>
@@ -391,12 +391,12 @@ function AdminHistoryView() {
       </div>
 
       {/* 필터 바 */}
-      <div className='bg-white rounded-2xl border border-gray-100 px-5 py-4 flex flex-wrap gap-3 items-center'>
+      <div className='bg-white rounded-md border border-gray-100 px-5 py-4 flex flex-wrap gap-3 items-center'>
         {/* 월 선택 */}
         <select
           value={monthFilter}
           onChange={(e) => setMonthFilter(e.target.value)}
-          className='px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
+          className='px-3 py-2 rounded-md border border-gray-200 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
         >
           {MONTHS.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
         </select>
@@ -412,7 +412,7 @@ function AdminHistoryView() {
             <button
               key={d.key}
               onClick={() => setDeptFilter(d.key)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                 deptFilter === d.key ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
               }`}
             >
@@ -431,13 +431,13 @@ function AdminHistoryView() {
             placeholder='이름 · 직급 검색'
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className='pl-9 pr-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40'
+            className='pl-9 pr-3 py-2 rounded-md border border-gray-200 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40'
           />
         </div>
       </div>
 
       {/* 직원 근무 기록 테이블 */}
-      <div className='bg-white rounded-2xl border border-gray-100 overflow-hidden'>
+      <div className='bg-white rounded-md border border-gray-100 overflow-hidden'>
         {/* 데스크탑 테이블 */}
         <div className='hidden md:block overflow-x-auto'>
           <table className='w-full text-sm'>

@@ -16,6 +16,7 @@ import { PositionsModule } from './positions/positions.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { MailNotificationModule } from './mail-notification/mail-notification.module';
 import { CrmModule } from './crm/crm.module';
+import { TodosModule } from './todos/todos.module';
 import { IpWhitelistGuard } from './common/guards/ip-whitelist.guard';
 
 @Module({
@@ -47,6 +48,7 @@ import { IpWhitelistGuard } from './common/guards/ip-whitelist.guard';
     DepartmentsModule,
     MailNotificationModule,
     CrmModule,
+    TodosModule,
   ],
   controllers: [AppController],
   providers: [

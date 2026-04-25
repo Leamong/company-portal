@@ -159,8 +159,13 @@ export default function MessengerPage() {
   const [inputText, setInputText] = useState('');
   const [otherUsers, setOtherUsers] = useState<OtherUser[]>([]);
   const [userProfileMap, setUserProfileMap] = useState<Record<string, string | null>>({});
-  const [showNewDm, setShowNewDm] = useState(false);
-  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [leftFilter, setLeftFilter] = useState<'all' | 'unread' | 'starred'>('all');
+  const [starredRoomIds, setStarredRoomIds] = useState<Set<string>>(() => {
+    try {
+      const saved = localStorage.getItem('messenger_starred');
+      return new Set(saved ? JSON.parse(saved) : []);
+    } catch { return new Set(); }
+  });
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -268,7 +273,6 @@ export default function MessengerPage() {
   const openRoom = useCallback(async (room: ChatRoom) => {
     setSelectedRoom(room);
     setTypingUsers([]);
-    setShowNewDm(false);
     setSelectedUserInfo(null);
     setMsgSearchMode(false);
     setMsgSearchQuery('');
@@ -449,26 +453,24 @@ export default function MessengerPage() {
     );
   };
 
-  const filteredRooms = rooms.filter((r) =>
-    getRoomDisplayName(r).toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  const toggleStar = (roomId: string) => {
+    setStarredRoomIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(roomId)) next.delete(roomId);
+      else next.add(roomId);
+      try { localStorage.setItem('messenger_starred', JSON.stringify([...next])); } catch { /* 무시 */ }
+      return next;
+    });
+  };
 
-  const filteredUsers = otherUsers.filter((u) => {
-    if (!searchQuery.trim()) return true;
-    const q = searchQuery.toLowerCase();
-    return u.name.toLowerCase().includes(q) || u.position.toLowerCase().includes(q);
+  const filteredRooms = rooms.filter((r) => {
+    const nameMatch = getRoomDisplayName(r).toLowerCase().includes(searchQuery.toLowerCase());
+    const unreadMatch = leftFilter !== 'unread' || r.unreadCount > 0;
+    const starredMatch = leftFilter !== 'starred' || starredRoomIds.has(r._id);
+    return nameMatch && unreadMatch && starredMatch;
   });
 
-  const filteredGroupedUsers = filteredUsers.reduce<Record<string, OtherUser[]>>((acc, u) => {
-    const dept = u.department || 'management';
-    if (!acc[dept]) acc[dept] = [];
-    acc[dept].push(u);
-    return acc;
-  }, {});
-
-  const filteredSortedDepts = Object.keys(filteredGroupedUsers).sort(
-    (a, b) => DEPT_ORDER.indexOf(a) - DEPT_ORDER.indexOf(b),
-  );
+  const starredCount = rooms.filter((r) => starredRoomIds.has(r._id)).length;
 
   const deptLabel = (key: string) => deptMap[key]?.label ?? key;
   const deptBadge = (key: string) => getColorMeta(deptMap[key]?.color ?? 'blue');
@@ -526,52 +528,139 @@ export default function MessengerPage() {
   // ─── 렌더 ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className='h-[calc(100vh-7.5rem)] flex bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm'>
+    <div className='h-[calc(100vh-7.5rem)] flex bg-white rounded-md border border-gray-100 overflow-hidden shadow-sm'>
 
       {/* ══════════════════════════════════════════════════════
-          좌측: 수신함 패널
+          좌측: 네비게이션 패널 (수신함 / 필터 / 직원 목록)
       ══════════════════════════════════════════════════════ */}
-      <div className='w-72 border-r border-gray-100 flex flex-col shrink-0 bg-white'>
+      <div className='w-52 border-r border-gray-100 flex flex-col shrink-0 bg-gray-50/60'>
 
         {/* 헤더 */}
-        <div className='px-5 pt-5 pb-3 border-b border-gray-100'>
-          <div className='flex items-center justify-between mb-4'>
+        <div className='px-4 pt-5 pb-3 border-b border-gray-100'>
+          <div className='flex items-center justify-between'>
             <div className='flex items-center gap-2'>
-              <h1 className='text-lg font-bold text-gray-900'>수신함</h1>
+              <h1 className='text-base font-bold text-gray-900'>수신함</h1>
               {totalUnread > 0 && (
-                <span className='bg-violet-600 text-white text-xs font-bold rounded-full px-2 py-0.5 leading-none'>
+                <span className='bg-violet-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 leading-none'>
                   {totalUnread}
                 </span>
               )}
             </div>
-            <div className='flex gap-1'>
-              <button
-                onClick={() => { fetchOtherUsers(); setShowGroupModal(true); }}
-                className='p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition'
-                title='그룹 채팅 만들기'
-              >
-                <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z' />
-                </svg>
-              </button>
-              <button
-                onClick={() => { fetchOtherUsers(); setShowNewDm((v) => !v); }}
-                className={cn(
-                  'p-1.5 rounded-lg transition',
-                  showNewDm
-                    ? 'text-violet-600 bg-violet-50'
-                    : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100',
-                )}
-                title='새 대화 시작'
-              >
-                <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 4v16m8-8H4' />
-                </svg>
-              </button>
-            </div>
+            <button
+              onClick={() => { fetchOtherUsers(); setShowGroupModal(true); }}
+              className='p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-200 rounded-md transition'
+              title='그룹 채팅 만들기'
+            >
+              <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z' />
+              </svg>
+            </button>
           </div>
+        </div>
 
-          {/* 방/직원 검색 */}
+        {/* 필터 네비게이션 */}
+        <div className='px-2 py-2 space-y-0.5 border-b border-gray-100'>
+          <button
+            onClick={() => setLeftFilter('unread')}
+            className={cn(
+              'w-full flex items-center justify-between px-3 py-2 rounded-md text-sm transition',
+              leftFilter === 'unread'
+                ? 'bg-violet-100 text-violet-700 font-semibold'
+                : 'text-gray-600 hover:bg-gray-200',
+            )}
+          >
+            <div className='flex items-center gap-2.5'>
+              <svg className='w-4 h-4 shrink-0' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' />
+              </svg>
+              <span>안 읽은 메시지</span>
+            </div>
+            {totalUnread > 0 && (
+              <span className='bg-violet-600 text-white text-[11px] font-bold rounded-full min-w-5 h-5 flex items-center justify-center px-1.5 leading-none shrink-0'>
+                {totalUnread}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => setLeftFilter('starred')}
+            className={cn(
+              'w-full flex items-center justify-between px-3 py-2 rounded-md text-sm transition',
+              leftFilter === 'starred'
+                ? 'bg-violet-100 text-violet-700 font-semibold'
+                : 'text-gray-600 hover:bg-gray-200',
+            )}
+          >
+            <div className='flex items-center gap-2.5'>
+              <svg className='w-4 h-4 shrink-0' fill={leftFilter === 'starred' ? 'currentColor' : 'none'} stroke='currentColor' viewBox='0 0 24 24'>
+                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z' />
+              </svg>
+              즐겨찾기
+            </div>
+            {starredCount > 0 && (
+              <span className='bg-amber-400 text-white text-[11px] font-bold rounded-full min-w-5 h-5 flex items-center justify-center px-1.5 leading-none shrink-0'>
+                {starredCount}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => setLeftFilter('all')}
+            className={cn(
+              'w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition',
+              leftFilter === 'all'
+                ? 'bg-violet-100 text-violet-700 font-semibold'
+                : 'text-gray-600 hover:bg-gray-200',
+            )}
+          >
+            <svg className='w-4 h-4 shrink-0' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' />
+            </svg>
+            전체 대화
+          </button>
+        </div>
+
+        {/* 직원 목록 (부서별) */}
+        <div className='flex-1 overflow-y-auto py-2'>
+          <p className='px-4 py-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wider'>
+            멤버
+          </p>
+          {otherUsers.length === 0 ? (
+            <p className='px-4 py-2 text-xs text-gray-400'>불러오는 중...</p>
+          ) : (
+            sortedDepts.map((dept) => (
+              <div key={dept}>
+                <p className='px-4 pt-2 pb-1 text-[11px] font-semibold text-gray-400'>
+                  {deptLabel(dept)}
+                </p>
+                {groupedUsers[dept].map((u) => (
+                  <button
+                    key={u._id}
+                    onClick={() => startDm(u)}
+                    className='w-full flex items-center gap-2.5 px-3 py-1.5 hover:bg-gray-200 rounded-md transition text-left mx-1'
+                    style={{ width: 'calc(100% - 8px)' }}
+                  >
+                    <div className='relative shrink-0'>
+                      <UserAvatar userId={u._id} name={u.name} colorClass={getAvatarColor(u.name)} size='w-7 h-7' textSize='text-xs' />
+                      <span className='absolute bottom-0 right-0 w-2 h-2 bg-emerald-400 rounded-full border border-white' />
+                    </div>
+                    <div className='flex-1 min-w-0'>
+                      <p className='text-xs font-medium text-gray-700 truncate'>{u.name}</p>
+                      <p className='text-[10px] text-gray-400 truncate'>{u.position}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════
+          중간: 대화 목록 패널
+      ══════════════════════════════════════════════════════ */}
+      <div className='w-72 border-r border-gray-100 flex flex-col shrink-0 bg-white'>
+
+        {/* 검색 */}
+        <div className='px-4 pt-4 pb-3 border-b border-gray-100'>
           <div className='relative'>
             <svg className='absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
               <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' />
@@ -582,94 +671,26 @@ export default function MessengerPage() {
               placeholder='대화 검색'
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => { fetchOtherUsers(); setShowUserDropdown(true); }}
-              onBlur={() => setTimeout(() => setShowUserDropdown(false), 150)}
-              className='w-full pl-9 pr-3 py-2 bg-gray-50 rounded-xl text-sm text-gray-700 placeholder-gray-400 outline-none focus:ring-2 focus:ring-violet-500/30 focus:bg-white transition'
+              className='w-full pl-9 pr-3 py-2 bg-gray-50 rounded-md text-sm text-gray-700 placeholder-gray-400 outline-none focus:ring-2 focus:ring-violet-500/30 focus:bg-white transition'
             />
           </div>
         </div>
 
-        {/* 직원 검색 드롭다운 */}
-        {showUserDropdown && (
-          <div className='border-b border-gray-100 overflow-y-auto bg-white' style={{ maxHeight: '280px' }}>
-            <p className='px-5 py-2 text-[10px] font-semibold text-gray-400 uppercase tracking-wider sticky top-0 bg-white border-b border-gray-50'>
-              대화 상대
-            </p>
-            {otherUsers.length === 0 ? (
-              <p className='px-5 py-3 text-xs text-gray-400'>불러오는 중...</p>
-            ) : filteredSortedDepts.length === 0 ? (
-              <p className='px-5 py-3 text-xs text-gray-400'>검색 결과가 없습니다</p>
-            ) : (
-              filteredSortedDepts.map((dept) => (
-                <div key={dept}>
-                  <p className='px-5 py-1.5 text-[11px] font-bold text-gray-500 bg-gray-50/80'>
-                    {deptLabel(dept)}
-                  </p>
-                  {filteredGroupedUsers[dept].map((u) => (
-                    <button
-                      key={u._id}
-                      onMouseDown={() => startDm(u)}
-                      className='w-full flex items-center gap-3 px-5 py-2.5 hover:bg-violet-50 transition-colors text-left'
-                    >
-                      <UserAvatar userId={u._id} name={u.name} colorClass={getAvatarColor(u.name)} size='w-8 h-8' textSize='text-sm' />
-                      <p className='text-sm font-medium text-gray-800 flex items-center gap-1.5'>
-                        {u.name}
-                        <span className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-gray-100 text-gray-500 leading-none'>
-                          {u.position}
-                        </span>
-                      </p>
-                    </button>
-                  ))}
-                </div>
-              ))
-            )}
-          </div>
-        )}
-
-        {/* 새 DM 패널 */}
-        {showNewDm && !showUserDropdown && (
-          <div className='border-b border-gray-100 max-h-64 overflow-y-auto bg-gray-50/60'>
-            <p className='px-5 py-2 text-[10px] font-semibold text-gray-400 uppercase tracking-wider'>
-              대화 상대 선택
-            </p>
-            {otherUsers.length === 0 ? (
-              <p className='px-5 py-3 text-xs text-gray-400'>불러오는 중...</p>
-            ) : (
-              sortedDepts.map((dept) => (
-                <div key={dept}>
-                  <p className='px-5 py-1.5 text-[11px] font-bold text-gray-500 bg-gray-100/80'>
-                    {deptLabel(dept)}
-                  </p>
-                  {groupedUsers[dept].map((u) => (
-                    <button
-                      key={u._id}
-                      onClick={() => startDm(u)}
-                      className='w-full flex items-center gap-3 px-5 py-2.5 hover:bg-violet-50 transition-colors text-left'
-                    >
-                      <UserAvatar userId={u._id} name={u.name} colorClass={getAvatarColor(u.name)} size='w-8 h-8' textSize='text-sm' />
-                      <p className='text-sm font-medium text-gray-800 flex items-center gap-1.5'>
-                        {u.name}
-                        <span className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-gray-100 text-gray-500 leading-none'>
-                          {u.position}
-                        </span>
-                      </p>
-                    </button>
-                  ))}
-                </div>
-              ))
-            )}
-          </div>
-        )}
-
-        {/* 채팅방 목록 */}
+        {/* 대화 목록 */}
         <div className='flex-1 overflow-y-auto'>
           {filteredRooms.length === 0 ? (
             <div className='flex flex-col items-center justify-center h-full text-gray-400 gap-2 py-10'>
               <svg className='w-12 h-12 text-gray-200' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                 <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.2} d='M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' />
               </svg>
-              <p className='text-sm'>대화가 없습니다</p>
-              <p className='text-xs text-gray-300 mt-1'>검색창을 눌러 대화를 시작하세요</p>
+              <p className='text-sm'>
+                {leftFilter === 'unread' ? '읽지 않은 대화가 없습니다' :
+                 leftFilter === 'starred' ? '즐겨찾기한 대화가 없습니다' :
+                 '대화가 없습니다'}
+              </p>
+              {leftFilter === 'all' && (
+                <p className='text-xs text-gray-300'>왼쪽 직원 목록에서 대화를 시작하세요</p>
+              )}
             </div>
           ) : (
             filteredRooms.map((room) => {
@@ -680,14 +701,14 @@ export default function MessengerPage() {
                   key={room._id}
                   onClick={() => openRoom(room)}
                   className={cn(
-                    'w-full flex items-center gap-3 px-5 py-3.5 transition-colors text-left',
+                    'w-full flex items-center gap-3 px-4 py-3.5 transition-colors text-left border-r-2',
                     active
-                      ? 'bg-violet-50 border-r-2 border-violet-600'
-                      : 'hover:bg-gray-50 border-r-2 border-transparent',
+                      ? 'bg-violet-50 border-violet-600'
+                      : 'hover:bg-gray-50 border-transparent',
                   )}
                 >
                   <div className='relative shrink-0'>
-                    <UserAvatar userId={getRoomPartnerId(room)} name={displayName} colorClass={getAvatarColor(displayName)} size='w-11 h-11' textSize='text-base' />
+                    <UserAvatar userId={getRoomPartnerId(room)} name={displayName} colorClass={getAvatarColor(displayName)} size='w-10 h-10' textSize='text-base' />
                     {room.type === 'group' && (
                       <span className='absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center'>
                         <svg className='w-2.5 h-2.5 text-white' fill='currentColor' viewBox='0 0 24 24'>
@@ -784,7 +805,7 @@ export default function MessengerPage() {
               <button
                 onClick={() => setMsgSearchMode((v) => !v)}
                 className={cn(
-                  'p-2 rounded-lg transition',
+                  'p-2 rounded-md transition',
                   msgSearchMode
                     ? 'text-violet-600 bg-violet-50'
                     : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100',
@@ -795,11 +816,31 @@ export default function MessengerPage() {
                   <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.8} d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' />
                 </svg>
               </button>
+              {/* 즐겨찾기 토글 */}
+              {(() => {
+                const isStarred = starredRoomIds.has(selectedRoom._id);
+                return (
+                  <button
+                    onClick={() => toggleStar(selectedRoom._id)}
+                    title={isStarred ? '즐겨찾기 해제' : '즐겨찾기 등록'}
+                    className={cn(
+                      'p-2 rounded-md transition',
+                      isStarred
+                        ? 'text-amber-400 bg-amber-50'
+                        : 'text-gray-400 hover:text-amber-400 hover:bg-amber-50',
+                    )}
+                  >
+                    <svg className='w-5 h-5' fill={isStarred ? 'currentColor' : 'none'} stroke='currentColor' viewBox='0 0 24 24'>
+                      <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.8} d='M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z' />
+                    </svg>
+                  </button>
+                );
+              })()}
               {/* 대화 정보 (점 3개) */}
               <button
                 onClick={() => setShowInfoPanel((v) => !v)}
                 className={cn(
-                  'p-2 rounded-lg transition',
+                  'p-2 rounded-md transition',
                   showInfoPanel
                     ? 'text-violet-600 bg-violet-50'
                     : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100',
@@ -856,7 +897,7 @@ export default function MessengerPage() {
                   <img
                     src={pastedImage}
                     alt='붙여넣기 이미지'
-                    className='h-16 w-auto max-w-32 rounded-lg object-cover border border-amber-200'
+                    className='h-16 w-auto max-w-32 rounded-md object-cover border border-amber-200'
                   />
                   <button
                     onClick={() => setPastedImage(null)}
@@ -874,13 +915,13 @@ export default function MessengerPage() {
                 <div className='flex gap-2 shrink-0'>
                   <button
                     onClick={() => setPastedImage(null)}
-                    className='px-3 py-1.5 text-xs text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition'
+                    className='px-3 py-1.5 text-xs text-gray-600 border border-gray-200 rounded-md hover:bg-gray-50 transition'
                   >
                     취소
                   </button>
                   <button
                     onClick={sendPastedImage}
-                    className='px-3 py-1.5 text-xs text-white bg-violet-600 rounded-lg hover:bg-violet-700 transition font-medium'
+                    className='px-3 py-1.5 text-xs text-white bg-violet-600 rounded-md hover:bg-violet-700 transition font-medium'
                   >
                     전송
                   </button>
@@ -987,7 +1028,7 @@ export default function MessengerPage() {
                             <button
                               onClick={() => setMediaLightbox(msg.content)}
                               className={cn(
-                                'overflow-hidden rounded-2xl border cursor-zoom-in hover:opacity-90 transition',
+                                'overflow-hidden rounded-md border cursor-zoom-in hover:opacity-90 transition',
                                 isMe ? 'rounded-br-sm border-violet-200' : 'rounded-bl-sm border-gray-200 shadow-sm',
                               )}
                             >
@@ -1003,8 +1044,8 @@ export default function MessengerPage() {
                             <div className={cn(
                               'px-4 py-2.5 text-sm leading-relaxed break-words whitespace-pre-wrap',
                               isMe
-                                ? 'bg-violet-600 text-white rounded-2xl rounded-br-sm'
-                                : 'bg-white text-gray-800 rounded-2xl rounded-bl-sm shadow-sm border border-gray-100',
+                                ? 'bg-violet-600 text-white rounded-md rounded-br-sm'
+                                : 'bg-white text-gray-800 rounded-md rounded-bl-sm shadow-sm border border-gray-100',
                               // 연속 메시지 모서리 처리
                               isContinued && isMe && 'rounded-tr-2xl rounded-br-sm',
                               isContinued && !isMe && 'rounded-tl-2xl rounded-bl-sm',
@@ -1034,7 +1075,7 @@ export default function MessengerPage() {
                   const typingUser = otherUsers.find((u) => u.name === typingUsers[0]);
                   return <UserAvatar userId={typingUser?._id} name={typingUsers[0] || '?'} colorClass='bg-gray-300' size='w-8 h-8' textSize='text-xs' />;
                 })()}
-                <div className='bg-white border border-gray-100 shadow-sm px-4 py-3 rounded-2xl rounded-bl-sm'>
+                <div className='bg-white border border-gray-100 shadow-sm px-4 py-3 rounded-md rounded-bl-sm'>
                   <div className='flex gap-1 items-center'>
                     <span className='text-xs text-gray-400 mr-1.5'>{typingUsers.join(', ')} 입력 중</span>
                     <span className='w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce' style={{ animationDelay: '0ms' }} />
@@ -1058,7 +1099,7 @@ export default function MessengerPage() {
             )}
             <div
               className={cn(
-                'flex gap-3 items-center bg-gray-50 rounded-2xl px-4 py-2.5 border transition',
+                'flex gap-3 items-center bg-gray-50 rounded-md px-4 py-2.5 border transition',
                 msgSearchMode
                   ? 'border-gray-100 opacity-50 pointer-events-none'
                   : 'border-gray-200 focus-within:border-violet-400 focus-within:ring-3 focus-within:ring-violet-500/10',
@@ -1105,7 +1146,7 @@ export default function MessengerPage() {
                 onClick={sendMessage}
                 disabled={!inputText.trim()}
                 className={cn(
-                  'p-2 rounded-xl transition-all shrink-0',
+                  'p-2 rounded-md transition-all shrink-0',
                   inputText.trim()
                     ? 'bg-violet-600 text-white hover:bg-violet-700 shadow-sm'
                     : 'text-gray-300 cursor-not-allowed',
@@ -1121,7 +1162,7 @@ export default function MessengerPage() {
       ) : (
         /* ── 채팅방 미선택 ── */
         <div className='flex-1 flex flex-col items-center justify-center text-gray-400 gap-4 bg-gray-50/30'>
-          <div className='w-20 h-20 rounded-2xl bg-violet-100 flex items-center justify-center'>
+          <div className='w-20 h-20 rounded-md bg-violet-100 flex items-center justify-center'>
             <svg className='w-10 h-10 text-violet-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
               <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z' />
             </svg>
@@ -1130,12 +1171,7 @@ export default function MessengerPage() {
             <p className='text-base font-semibold text-gray-600'>대화를 선택해주세요</p>
             <p className='text-sm text-gray-400 mt-1'>왼쪽 목록에서 대화를 선택하거나<br />새 메시지를 시작하세요</p>
           </div>
-          <button
-            onClick={() => { fetchOtherUsers(); setShowNewDm(true); }}
-            className='mt-2 px-5 py-2.5 bg-violet-600 text-white text-sm font-medium rounded-xl hover:bg-violet-700 transition shadow-sm'
-          >
-            새 메시지 작성
-          </button>
+          <p className='text-xs text-gray-400 mt-1'>왼쪽 직원 목록에서 대화를 시작하세요</p>
         </div>
       )}
 
@@ -1225,7 +1261,7 @@ export default function MessengerPage() {
                   <button
                     key={msg._id}
                     onClick={() => setMediaLightbox(msg.content)}
-                    className='aspect-square rounded-lg overflow-hidden hover:opacity-80 transition cursor-zoom-in'
+                    className='aspect-square rounded-md overflow-hidden hover:opacity-80 transition cursor-zoom-in'
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -1236,7 +1272,7 @@ export default function MessengerPage() {
                   </button>
                 ))}
                 {mediaMessages.length > 9 && (
-                  <div className='aspect-square rounded-lg bg-gray-100 flex items-center justify-center'>
+                  <div className='aspect-square rounded-md bg-gray-100 flex items-center justify-center'>
                     <span className='text-xs text-gray-500 font-medium'>+{mediaMessages.length - 9}</span>
                   </div>
                 )}
@@ -1266,7 +1302,7 @@ export default function MessengerPage() {
       ══════════════════════════════════════════════════════ */}
       {showAddMemberModal && selectedRoom && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm'>
-          <div className='bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6'>
+          <div className='bg-white rounded-md shadow-2xl w-full max-w-md mx-4 p-6'>
             <div className='flex items-center justify-between mb-5'>
               <div>
                 <h2 className='text-lg font-bold text-gray-900'>대화 상대 추가</h2>
@@ -1291,7 +1327,7 @@ export default function MessengerPage() {
                     <span className='ml-1 text-violet-600 font-semibold'>{addMemberSelected.length}명 선택됨</span>
                   )}
                 </label>
-                <div className='max-h-56 overflow-y-auto border border-gray-200 rounded-xl'>
+                <div className='max-h-56 overflow-y-auto border border-gray-200 rounded-md'>
                   {otherUsers
                     .filter((u) => !selectedRoom.participantNames.includes(u.name))
                     .map((u) => {
@@ -1332,14 +1368,14 @@ export default function MessengerPage() {
               <div className='flex gap-3 pt-1'>
                 <button
                   onClick={() => { setShowAddMemberModal(false); setAddMemberSelected([]); }}
-                  className='flex-1 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition'
+                  className='flex-1 py-2.5 rounded-md border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition'
                 >
                   취소
                 </button>
                 <button
                   onClick={addParticipants}
                   disabled={addMemberSelected.length === 0}
-                  className='flex-1 py-2.5 rounded-xl bg-violet-600 text-white text-sm font-medium hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed transition shadow-sm'
+                  className='flex-1 py-2.5 rounded-md bg-violet-600 text-white text-sm font-medium hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed transition shadow-sm'
                 >
                   추가하기
                 </button>
@@ -1354,7 +1390,7 @@ export default function MessengerPage() {
       ══════════════════════════════════════════════════════ */}
       {showGroupModal && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm'>
-          <div className='bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6'>
+          <div className='bg-white rounded-md shadow-2xl w-full max-w-md mx-4 p-6'>
             <div className='flex items-center justify-between mb-5'>
               <h2 className='text-lg font-bold text-gray-900'>그룹 채팅 만들기</h2>
               <button
@@ -1374,7 +1410,7 @@ export default function MessengerPage() {
                   value={groupName}
                   onChange={(e) => setGroupName(e.target.value)}
                   placeholder='예: 마케팅팀 전체'
-                  className='w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-400 transition'
+                  className='w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-400 transition'
                 />
               </div>
               <div>
@@ -1384,7 +1420,7 @@ export default function MessengerPage() {
                     <span className='ml-1 text-violet-600 font-semibold'>{groupMembers.length}명 선택됨</span>
                   )}
                 </label>
-                <div className='max-h-48 overflow-y-auto border border-gray-200 rounded-xl'>
+                <div className='max-h-48 overflow-y-auto border border-gray-200 rounded-md'>
                   {otherUsers.map((u) => {
                     const selected = groupMembers.some((m) => m._id === u._id);
                     return (
@@ -1425,14 +1461,14 @@ export default function MessengerPage() {
               <div className='flex gap-3 pt-1'>
                 <button
                   onClick={() => { setShowGroupModal(false); setGroupName(''); setGroupMembers([]); }}
-                  className='flex-1 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition'
+                  className='flex-1 py-2.5 rounded-md border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition'
                 >
                   취소
                 </button>
                 <button
                   onClick={createGroupRoom}
                   disabled={!groupName.trim() || groupMembers.length === 0}
-                  className='flex-1 py-2.5 rounded-xl bg-violet-600 text-white text-sm font-medium hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed transition shadow-sm'
+                  className='flex-1 py-2.5 rounded-md bg-violet-600 text-white text-sm font-medium hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed transition shadow-sm'
                 >
                   만들기
                 </button>
@@ -1462,7 +1498,7 @@ export default function MessengerPage() {
           <img
             src={mediaLightbox}
             alt='이미지 크게 보기'
-            className='max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl'
+            className='max-w-[90vw] max-h-[90vh] object-contain rounded-md shadow-2xl'
             onClick={(e) => e.stopPropagation()}
           />
         </div>

@@ -51,7 +51,7 @@ export default function MailToast() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 12, scale: 0.95 }}
           transition={{ duration: 0.22, ease: 'easeOut' }}
-          className='fixed bottom-6 right-6 z-50 w-80 rounded-xl bg-gray-900 border border-gray-700 shadow-2xl overflow-hidden'
+          className='fixed bottom-6 right-6 z-50 w-80 rounded-md bg-gray-900 border border-gray-700 shadow-2xl overflow-hidden'
         >
           {/* 상단 진행 바 (5초 애니메이션) */}
           <motion.div
@@ -96,7 +96,7 @@ export default function MailToast() {
             {/* 열기 버튼 */}
             <button
               onClick={openMail}
-              className='mt-3 w-full py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-colors'
+              className='mt-3 w-full py-1.5 rounded-md bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-colors'
             >
               메일함 열기
             </button>

@@ -37,6 +37,11 @@ export class StorageService {
     }
   }
 
+  /** R2 환경변수 구성 여부 */
+  isConfigured(): boolean {
+    return this.client !== null;
+  }
+
   /** 오브젝트 업로드 → 공개 URL 반환 */
   async uploadObject(key: string, body: Buffer, contentType: string): Promise<string> {
     if (!this.client) throw new Error('R2 클라이언트가 초기화되지 않았습니다.');

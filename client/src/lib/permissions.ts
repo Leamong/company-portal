@@ -14,7 +14,8 @@ export const PAGE_PERMISSIONS = [
   { key: 'mail', label: '사내 메일', href: '/mail', external: true },
   { key: 'crm', label: '고객 관리', href: '/crm' },
   { key: 'calendar', label: '일정 관리', href: '/calendar' },
-  { key: 'finance', label: '재무/급여', href: '/finance' },
+  { key: 'revenue', label: '매출 관리', href: '/finance' },
+  { key: 'payroll', label: '급여 관리', href: '/finance/payroll' },
 ] as const;
 
 export type PagePermissionKey = (typeof PAGE_PERMISSIONS)[number]['key'];
@@ -41,5 +42,6 @@ export const ROUTE_PERMISSION_MAP: Record<string, PagePermissionKey> = {
   '/approval': 'approval',
   '/crm': 'crm',
   '/calendar': 'calendar',
-  '/finance': 'finance',
+  '/finance': 'revenue',
+  '/finance/payroll': 'payroll',
 };

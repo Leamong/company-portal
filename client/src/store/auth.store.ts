@@ -12,12 +12,20 @@ export interface AuthUser {
   department: 'marketing' | 'design' | 'management';
   role: 'head-admin' | 'employee';
   status: '출근' | '퇴근';
+  /** 대표 전용: 부재 상태 (결재 없이 직접 토글) */
+  absenceStatus: '휴가' | '부재' | null;
   profileImage: string | null;
   phone: string;
   birthDate: string | null;
   pagePermissions: string[];
   canApprove: boolean;
   canManageAttendance: boolean;
+  /** 저장된 결재 도장 SVG 원본 (자동 생성 또는 업로드) */
+  stampSvg: string | null;
+  /** 도장 색상 (자동 생성 시 stroke/text 색으로 사용) */
+  stampColor: string;
+  /** 개인별 대시보드 커스텀 레이아웃 (react-grid-layout 형식) */
+  dashboardLayout: Array<{ i: string; x: number; y: number; w: number; h: number; hidden?: boolean }>;
 }
 
 interface AuthState {

@@ -227,6 +227,27 @@ export class MessengerGateway implements OnGatewayConnection, OnGatewayDisconnec
     return this.userSockets.has(userId);
   }
 
+  // 특정 유저에게 이벤트 emit (결재 알림 등 외부 서비스에서 호출)
+  emitToUser(userId: string, event: string, data: unknown) {
+    const sockets = this.userSockets.get(userId);
+    if (!sockets) return;
+    for (const socketId of sockets) {
+      this.server.to(socketId).emit(event, data);
+    }
+  }
+
+  // 여러 유저에게 이벤트 emit
+  emitToUsers(userIds: string[], event: string, data: unknown) {
+    for (const uid of userIds) {
+      this.emitToUser(uid, event, data);
+    }
+  }
+
+  // 네임스페이스 전체 브로드캐스트 (결재 상태 변경 등)
+  broadcast(event: string, data: unknown) {
+    this.server.emit(event, data);
+  }
+
   // 특정 유저의 모든 소켓을 room에 join
   private joinUserToRoom(userId: string, roomId: string) {
     const sockets = this.userSockets.get(userId);

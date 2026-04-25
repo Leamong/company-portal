@@ -226,7 +226,7 @@ export default function TasksPage() {
 
         <div className='flex items-center gap-3 shrink-0'>
           {/* 뷰 전환 탭 */}
-          <div className='flex items-center gap-0.5 bg-gray-100 rounded-xl p-1'>
+          <div className='flex items-center gap-0.5 bg-gray-100 rounded-md p-1'>
             <ViewButton
               active={viewMode === 'board'}
               onClick={() => setViewMode('board')}
@@ -251,7 +251,7 @@ export default function TasksPage() {
           {isAdmin && viewMode === 'board' && (
             <button
               onClick={() => setModal({ open: true, mode: 'create' })}
-              className='flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-xl hover:bg-indigo-700 transition-colors shadow-sm'
+              className='flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-md hover:bg-indigo-700 transition-colors shadow-sm'
             >
               <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                 <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 4v16m8-8H4' />
@@ -275,7 +275,7 @@ export default function TasksPage() {
                 key={tab.key}
                 onClick={() => setDeptTab(tab.key)}
                 className={[
-                  'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap',
+                  'px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap',
                   deptTab === tab.key
                     ? 'bg-indigo-600 text-white shadow-sm'
                     : 'text-gray-500 hover:bg-gray-100',
@@ -295,7 +295,7 @@ export default function TasksPage() {
             <select
               value={assigneeFilter}
               onChange={(e) => setAssigneeFilter(e.target.value)}
-              className='text-xs border border-gray-200 rounded-lg px-2.5 py-1.5 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white'
+              className='text-xs border border-gray-200 rounded-md px-2.5 py-1.5 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white'
             >
               <option value=''>담당자 전체</option>
               {assignees.map((a) => <option key={a} value={a}>{a}</option>)}
@@ -304,7 +304,7 @@ export default function TasksPage() {
             <select
               value={designFilter}
               onChange={(e) => setDesignFilter(e.target.value)}
-              className='text-xs border border-gray-200 rounded-lg px-2.5 py-1.5 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white'
+              className='text-xs border border-gray-200 rounded-md px-2.5 py-1.5 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white'
             >
               <option value=''>종류 전체</option>
               {['배너', '로고', 'SNS', '카탈로그', '인쇄물', '기타'].map((d) => (
@@ -315,7 +315,7 @@ export default function TasksPage() {
             <button
               onClick={() => setPriorityFilter((p) => (p ? '' : '긴급'))}
               className={[
-                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors whitespace-nowrap',
+                'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border transition-colors whitespace-nowrap',
                 priorityFilter === '긴급'
                   ? 'bg-red-500 text-white border-red-500'
                   : 'text-gray-500 border-gray-200 hover:border-red-300 hover:text-red-500',
@@ -327,7 +327,7 @@ export default function TasksPage() {
             <button
               onClick={() => setSortByDue((p) => !p)}
               className={[
-                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors whitespace-nowrap',
+                'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border transition-colors whitespace-nowrap',
                 sortByDue
                   ? 'bg-indigo-500 text-white border-indigo-500'
                   : 'text-gray-500 border-gray-200 hover:border-indigo-300 hover:text-indigo-500',
@@ -432,7 +432,7 @@ function ViewButton({
     <button
       onClick={onClick}
       className={[
-        'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap',
+        'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all whitespace-nowrap',
         active
           ? 'bg-white text-indigo-700 shadow-sm font-semibold'
           : 'text-gray-500 hover:text-gray-700',
@@ -617,7 +617,7 @@ function MyTaskRow({
     : COLUMNS.filter((c) => (ALLOWED_TRANSITIONS[task.status] ?? []).includes(c.key));
 
   return (
-    <div className='flex items-center gap-3 px-4 py-3 bg-white rounded-xl border border-gray-100 hover:border-indigo-200 hover:shadow-sm transition-all group'>
+    <div className='flex items-center gap-3 px-4 py-3 bg-white rounded-md border border-gray-100 hover:border-indigo-200 hover:shadow-sm transition-all group'>
       {/* 상태 도트 */}
       <span className={`w-2 h-2 rounded-full shrink-0 ${col?.dot ?? 'bg-gray-300'}`} />
 
@@ -657,7 +657,7 @@ function MyTaskRow({
             <button
               key={c.key}
               onClick={() => onMove(task._id, c.key)}
-              className='text-[10px] px-2 py-1 rounded-lg border border-gray-200 text-gray-500 hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-600 transition-colors whitespace-nowrap'
+              className='text-[10px] px-2 py-1 rounded-md border border-gray-200 text-gray-500 hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-600 transition-colors whitespace-nowrap'
             >
               → {c.label}
             </button>
@@ -756,7 +756,7 @@ function TimelineView({
             key={mode}
             onClick={() => setGanttView(mode)}
             className={[
-              'px-3 py-1 text-xs font-medium rounded-lg transition-colors',
+              'px-3 py-1 text-xs font-medium rounded-md transition-colors',
               ganttView === mode
                 ? 'bg-indigo-600 text-white'
                 : 'text-gray-500 border border-gray-200 hover:bg-gray-50',
@@ -778,7 +778,7 @@ function TimelineView({
       </div>
 
       {/* 간트 차트 */}
-      <div className='flex-1 rounded-xl border border-gray-100 overflow-auto bg-white'>
+      <div className='flex-1 rounded-md border border-gray-100 overflow-auto bg-white'>
         <Gantt
           tasks={ganttTasks}
           viewMode={ganttView}
@@ -857,7 +857,7 @@ function ConfirmUploadModal({ task, onClose }: { task: Task; onClose: () => void
       className='fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4'
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className='bg-white rounded-2xl shadow-2xl w-full max-w-md'>
+      <div className='bg-white rounded-md shadow-2xl w-full max-w-md'>
         {done ? (
           <div className='px-8 py-10 text-center space-y-4'>
             <div className='w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center mx-auto'>
@@ -869,7 +869,7 @@ function ConfirmUploadModal({ task, onClose }: { task: Task; onClose: () => void
             <p className='text-sm text-gray-500'>어드민이 검토 후 승인 또는 피드백을 드릴 예정입니다.</p>
             <button
               onClick={onClose}
-              className='w-full py-2.5 rounded-xl bg-gray-900 text-white text-sm font-semibold hover:bg-gray-700 transition-colors'
+              className='w-full py-2.5 rounded-md bg-gray-900 text-white text-sm font-semibold hover:bg-gray-700 transition-colors'
             >
               닫기
             </button>
@@ -893,7 +893,7 @@ function ConfirmUploadModal({ task, onClose }: { task: Task; onClose: () => void
                 onDrop={handleDrop}
                 onDragOver={(e) => e.preventDefault()}
                 onClick={() => fileInputRef.current?.click()}
-                className='relative border-2 border-dashed border-gray-200 rounded-xl h-48 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-indigo-300 hover:bg-indigo-50/30 transition-colors overflow-hidden'
+                className='relative border-2 border-dashed border-gray-200 rounded-md h-48 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-indigo-300 hover:bg-indigo-50/30 transition-colors overflow-hidden'
               >
                 {preview ? (
                   <>
@@ -923,13 +923,13 @@ function ConfirmUploadModal({ task, onClose }: { task: Task; onClose: () => void
             </div>
 
             <div className='px-6 pb-5 flex gap-2'>
-              <button onClick={onClose} className='flex-1 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors'>
+              <button onClick={onClose} className='flex-1 py-2.5 rounded-md border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors'>
                 취소
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={loading || !file}
-                className='flex-1 py-2.5 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2'
+                className='flex-1 py-2.5 rounded-md bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2'
               >
                 {loading ? (
                   <svg className='w-4 h-4 animate-spin' fill='none' viewBox='0 0 24 24'>

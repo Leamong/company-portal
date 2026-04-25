@@ -129,7 +129,7 @@ export default function TeamAttendancePage() {
           <button
             key={s.label}
             onClick={() => setStatusFilter(statusFilter === s.label && s.label !== '전체' ? 'all' : s.label === '전체' ? 'all' : s.label)}
-            className={`bg-white rounded-2xl border p-3.5 text-left transition-colors hover:border-blue-200 ${
+            className={`bg-white rounded-md border p-3.5 text-left transition-colors hover:border-blue-200 ${
               (s.label === '전체' && statusFilter === 'all') || statusFilter === s.label
                 ? 'border-blue-300 bg-blue-50/30'
                 : 'border-gray-100'
@@ -145,13 +145,13 @@ export default function TeamAttendancePage() {
       </div>
 
       {/* 부서 탭 */}
-      <div className='bg-white rounded-2xl border border-gray-100 overflow-hidden'>
+      <div className='bg-white rounded-md border border-gray-100 overflow-hidden'>
         <div className='px-5 py-3 border-b border-gray-100 flex items-center gap-1'>
           {depts.map((d) => (
             <button
               key={d.key}
               onClick={() => setDeptFilter(d.key)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                 deptFilter === d.key ? 'bg-blue-600 text-white' : 'text-gray-500 hover:bg-gray-100'
               }`}
             >

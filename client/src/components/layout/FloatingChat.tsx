@@ -307,7 +307,7 @@ export default function FloatingChat() {
 
       {/* 채팅 패널 */}
       {isOpen && (
-        <div className='fixed bottom-24 right-6 z-50 w-80 h-120 bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden'>
+        <div className='fixed bottom-24 right-6 z-50 w-80 h-120 bg-white rounded-md shadow-2xl border border-gray-100 flex flex-col overflow-hidden'>
           {/* ── 채팅방 목록 ── */}
           {view === 'rooms' && (
             <>
@@ -424,7 +424,7 @@ export default function FloatingChat() {
                         )}
                         <div
                           className={cn(
-                            'max-w-50 px-3 py-2 rounded-2xl text-sm leading-relaxed wrap-break-word',
+                            'max-w-50 px-3 py-2 rounded-md text-sm leading-relaxed wrap-break-word',
                             isMe
                               ? 'bg-blue-600 text-white rounded-tr-sm'
                               : 'bg-gray-100 text-gray-800 rounded-tl-sm',
@@ -446,7 +446,7 @@ export default function FloatingChat() {
                     <div className='w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center shrink-0'>
                       <span className='text-gray-600 text-xs'>...</span>
                     </div>
-                    <div className='bg-gray-100 px-3 py-2 rounded-2xl rounded-tl-sm'>
+                    <div className='bg-gray-100 px-3 py-2 rounded-md rounded-tl-sm'>
                       <div className='flex gap-1 items-center h-4'>
                         <span className='w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce' style={{ animationDelay: '0ms' }} />
                         <span className='w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce' style={{ animationDelay: '150ms' }} />
@@ -460,7 +460,7 @@ export default function FloatingChat() {
 
               {/* 입력창 */}
               <div className='p-3 border-t border-gray-100 shrink-0'>
-                <div className='flex gap-2 items-center bg-gray-50 rounded-xl px-3 py-2'>
+                <div className='flex gap-2 items-center bg-gray-50 rounded-md px-3 py-2'>
                   <input
                     type='text'
                     value={inputText}

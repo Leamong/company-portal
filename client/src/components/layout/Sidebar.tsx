@@ -130,17 +130,13 @@ interface SubItem {
 
 const ATTENDANCE_SUB: SubItem[] = [
   // ── 직원 전용 ──
-  { label: '출퇴근 체크',    href: '/attendance',         employeeOnly: true },
-  { label: '내 근무 기록',   href: '/attendance/history', employeeOnly: true },
-  { label: '휴가 신청',      href: '/attendance/leave',   employeeOnly: true },
-  { label: '연장근무 신청',  href: '/attendance/overtime', employeeOnly: true },
+  { label: '출퇴근 체크',    href: '/attendance',          employeeOnly: true },
+  { label: '내 근무 기록',   href: '/attendance/history',  employeeOnly: true },
   // ── 관리자 전용 ──
-  { label: '근태 대시보드',  href: '/attendance',         adminOnly: true },
-  { label: '전체 근무 기록', href: '/attendance/history', adminOnly: true },
-  { label: '휴가 승인 관리', href: '/attendance/leave',   adminOnly: true },
-  { label: '연장근무 승인',  href: '/attendance/overtime', adminOnly: true },
+  { label: '근태 대시보드',  href: '/attendance',          adminOnly: true },
+  { label: '전체 근무 기록', href: '/attendance/history',  adminOnly: true },
   // ── 공통 (권한별) ──
-  { label: '팀 근태 현황',   href: '/attendance/team',    attendanceManagerOnly: true },
+  { label: '팀 근태 현황',   href: '/attendance/team',     attendanceManagerOnly: true },
   { label: '근무 설정',      href: '/attendance/settings', adminOnly: true },
 ];
 
@@ -148,6 +144,7 @@ const ADMIN_SUB: SubItem[] = [
   { label: '직원 관리', href: '/admin' },
   { label: '부서 / 직급', href: '/admin/departments' },
   { label: '권한 위임', href: '/admin/permissions' },
+  { label: '휴가 정책', href: '/admin/leave-policies' },
 ];
 
 const SUB_MENU_MAP: Record<string, SubItem[]> = {
@@ -173,13 +170,20 @@ const NAV_DISPLAY: NavEntry[] = [
   {
     type: 'group',
     key: 'communication',
-    label: '소통 / 결재',
+    label: '소통',
     iconKey: 'communication',
-    children: ['messenger', 'board', 'approval', 'mail'],
+    children: ['messenger', 'board', 'mail'],
   },
+  { type: 'item', key: 'approval' },
   { type: 'item', key: 'crm' },
   { type: 'item', key: 'calendar' },
-  { type: 'item', key: 'finance' },
+  {
+    type: 'group',
+    key: 'finance',
+    label: '재무 관리',
+    iconKey: 'finance',
+    children: ['revenue', 'payroll'],
+  },
 ];
 
 // ─── 서브메뉴 아이템 ───────────────────────────────────────────
@@ -204,14 +208,7 @@ function SubNavLink({
     <>
       <span className={cn('w-1 h-1 rounded-full shrink-0', active ? 'bg-blue-400' : 'bg-gray-600')} />
       <span className='flex-1'>{label}</span>
-      {badge != null && badge > 0 && (
-        <span className='relative inline-flex'>
-          <span className='animate-ping absolute inset-0 rounded-full bg-red-400 opacity-60' />
-          <span className='relative text-[10px] bg-red-500 text-white rounded-full min-w-4.5 h-4.5 flex items-center justify-center px-1 leading-none font-bold'>
-            {badge > 99 ? '99+' : badge}
-          </span>
-        </span>
-      )}
+      {badge != null && badge > 0 && <NotifBadge count={badge} />}
       {external && (
         <svg className='w-3 h-3 text-gray-600 shrink-0' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
           <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2}
@@ -222,7 +219,7 @@ function SubNavLink({
   );
 
   const cls = cn(
-    'flex items-center gap-2.5 pl-9 pr-3 py-1.5 rounded-lg text-xs transition-colors',
+    'flex items-center gap-2.5 pl-9 pr-3 py-1.5 rounded-md text-xs transition-colors',
     active ? 'text-white bg-white/10' : 'text-gray-500 hover:text-gray-300 hover:bg-gray-800',
   );
 
@@ -252,6 +249,18 @@ function SubNavLink({
   );
 }
 
+// ─── 공용 알림 배지 ──────────────────────────────────────────
+// 배경 없이 흰색 숫자만 표시. 100 이상은 '99+' 라벨.
+function NotifBadge({ count }: { count: number; ping?: boolean }) {
+  if (!count || count <= 0) return null;
+  const label = count > 99 ? '99+' : String(count);
+  return (
+    <span className='text-white text-[11px] font-bold leading-none tabular-nums'>
+      {label}
+    </span>
+  );
+}
+
 // ─── 메인 메뉴 아이템 (서브메뉴 지원) ─────────────────────────
 function NavItem({
   itemKey,
@@ -266,6 +275,8 @@ function NavItem({
   onClick,
   badge,
   subBadges,
+  warningLabel,
+  warningTone,
 }: {
   itemKey: string;
   href: string;
@@ -279,6 +290,8 @@ function NavItem({
   onClick?: () => void;
   badge?: number;
   subBadges?: Record<string, number>;
+  warningLabel?: string;
+  warningTone?: 'amber' | 'orange' | 'red';
 }) {
   const visibleSubs = subItems?.filter((s) => {
     if (s.adminOnly && !isAdmin) return false;
@@ -301,13 +314,18 @@ function NavItem({
   }, [isGroupActive]);
 
   if (!hasSubMenu) {
+    const warnClass = warningTone === 'red'
+      ? 'bg-red-500/20 text-red-300 ring-1 ring-red-500/40'
+      : warningTone === 'orange'
+        ? 'bg-orange-500/20 text-orange-300 ring-1 ring-orange-500/40'
+        : 'bg-amber-500/15 text-amber-300 ring-1 ring-amber-500/30';
     return (
       <li>
         <Link
           href={href}
           onClick={onClick}
           className={cn(
-            'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
+            'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors',
             pathname === href
               ? 'bg-blue-600 text-white'
               : 'text-gray-400 hover:bg-gray-800 hover:text-white',
@@ -315,11 +333,18 @@ function NavItem({
         >
           {icon}
           <span className='flex-1'>{label}</span>
-          {badge != null && badge > 0 && (
-            <span className='text-xs bg-red-500 text-white rounded-full px-1.5 py-0.5 leading-none'>
-              {badge}
+          {warningLabel && (
+            <span
+              className={cn(
+                'text-[10px] font-bold rounded-full px-1.5 py-0.5 leading-none',
+                warnClass,
+              )}
+              title='연차 만료 임박'
+            >
+              {warningLabel}
             </span>
           )}
+          {badge != null && badge > 0 && <NotifBadge count={badge} />}
         </Link>
       </li>
     );
@@ -330,7 +355,7 @@ function NavItem({
       <button
         onClick={() => setOpen((prev) => !prev)}
         className={cn(
-          'w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
+          'w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors',
           isGroupActive
             ? 'text-white bg-gray-800'
             : 'text-gray-400 hover:bg-gray-800 hover:text-white',
@@ -340,11 +365,8 @@ function NavItem({
         <span className='flex-1 text-left'>{label}</span>
         {/* 접혀있을 때만 그룹 버튼에 배지 표시 */}
         {!open && badge != null && badge > 0 && (
-          <span className='relative inline-flex mr-1'>
-            <span className='animate-ping absolute inset-0 rounded-full bg-red-400 opacity-60' />
-            <span className='relative text-[10px] bg-red-500 text-white rounded-full min-w-4.5 h-4.5 flex items-center justify-center px-1 leading-none font-bold'>
-              {badge > 99 ? '99+' : badge}
-            </span>
+          <span className='mr-1 inline-flex'>
+            <NotifBadge count={badge} />
           </span>
         )}
         <span className={cn('transition-transform duration-200 shrink-0', open ? 'rotate-180' : '')}>
@@ -393,7 +415,7 @@ function DelegatedSection({
             href='/approval'
             onClick={onClick}
             className={cn(
-              'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
+              'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors',
               pathname === '/approval'
                 ? 'bg-blue-600 text-white'
                 : 'text-gray-400 hover:bg-gray-800 hover:text-white',
@@ -416,7 +438,22 @@ export default function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
   const { isSidebarOpen, setSidebarOpen } = useUiStore();
-  const { unreadMessages, mailUnread } = useNotificationStore();
+  const { unreadMessages, mailUnread, boardUnread, approvalUnread, leaveExpiryWarning } = useNotificationStore();
+
+  // 연차 만료 임박 뱃지 계산 (90일 이내 & 잔여>0)
+  const leaveWarn = leaveExpiryWarning;
+  const leaveWarnTone: 'red' | 'orange' | 'amber' | undefined = leaveWarn
+    ? leaveWarn.daysUntilExpiry <= 7
+      ? 'red'
+      : leaveWarn.daysUntilExpiry <= 30
+        ? 'orange'
+        : 'amber'
+    : undefined;
+  const leaveWarnLabel = leaveWarn
+    ? leaveWarn.daysUntilExpiry <= 0
+      ? '오늘 만료'
+      : `D-${leaveWarn.daysUntilExpiry}`
+    : undefined;
   const isAdmin = user?.role === 'head-admin';
   const isApprover = !isAdmin && user?.canApprove === true;
   const isAttendanceManager = !isAdmin && user?.canManageAttendance === true;
@@ -477,7 +514,7 @@ export default function Sidebar() {
         {/* 로고 */}
         <div className='h-14 flex items-center justify-between px-4 border-b border-gray-800 shrink-0'>
           <div className='flex items-center gap-2.5'>
-            <div className='w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center'>
+            <div className='w-7 h-7 rounded-md bg-blue-600 flex items-center justify-center'>
               <span className='text-white text-xs font-bold'>C</span>
             </div>
             <span className='text-white font-semibold text-sm'>Company Portal</span>
@@ -547,6 +584,8 @@ export default function Sidebar() {
               pathname={pathname}
               isAdmin={isAdmin}
               onClick={handleNavClick}
+              warningLabel={leaveWarnLabel}
+              warningTone={leaveWarnTone}
             />
             <NavItem
               itemKey='organization'
@@ -583,6 +622,7 @@ export default function Sidebar() {
                         isApprover={isApprover}
                         isAttendanceManager={isAttendanceManager}
                         onClick={handleNavClick}
+                        badge={item.key === 'approval' && approvalUnread > 0 ? approvalUnread : undefined}
                       />
                     );
                   }
@@ -600,18 +640,20 @@ export default function Sidebar() {
                     external: (i as { external?: boolean }).external,
                   }));
 
-                  // communication 그룹: 메신저 + 메일 알림 배지 연결
+                  // communication 그룹: 메신저 + 메일 + 게시판 알림 배지 연결
                   const isCommunication = entry.key === 'communication';
                   const messengerHref = visibleChildren.find((c) => c.key === 'messenger')?.href;
                   const mailHref = visibleChildren.find((c) => c.key === 'mail')?.href;
+                  const boardHref = visibleChildren.find((c) => c.key === 'board')?.href;
                   const totalCommBadge = isCommunication
-                    ? (unreadMessages || 0) + (mailUnread || 0)
+                    ? (unreadMessages || 0) + (mailUnread || 0) + (boardUnread || 0)
                     : undefined;
 
                   const subBadgesMap: Record<string, number> = {};
                   if (isCommunication) {
                     if (messengerHref && unreadMessages > 0) subBadgesMap[messengerHref] = unreadMessages;
                     if (mailHref && mailUnread > 0) subBadgesMap[mailHref] = mailUnread;
+                    if (boardHref && boardUnread > 0) subBadgesMap[boardHref] = boardUnread;
                   }
 
                   return (
@@ -666,7 +708,7 @@ export default function Sidebar() {
         <div className='px-3 py-2.5 border-t border-gray-800 shrink-0'>
           <button
             onClick={logout}
-            className='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-white hover:bg-gray-800 transition-colors'
+            className='w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-gray-500 hover:text-white hover:bg-gray-800 transition-colors'
           >
             <svg className='w-4 h-4 shrink-0' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
               <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1' />

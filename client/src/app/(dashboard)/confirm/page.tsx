@@ -203,7 +203,7 @@ function UploadModal({ onClose, onSuccess }: UploadModalProps) {
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className='bg-white rounded-2xl shadow-2xl w-full max-w-lg'
+        className='bg-white rounded-md shadow-2xl w-full max-w-lg'
       >
         {/* 헤더 */}
         <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100'>
@@ -223,7 +223,7 @@ function UploadModal({ onClose, onSuccess }: UploadModalProps) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder='예) 봄 시즌 배너 v2'
-              className='w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400'
+              className='w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400'
             />
           </div>
 
@@ -235,7 +235,7 @@ function UploadModal({ onClose, onSuccess }: UploadModalProps) {
                 <button
                   key={t}
                   onClick={() => setDesignType(t)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors
                     ${designType === t ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300'}`}
                 >
                   {t}
@@ -251,7 +251,7 @@ function UploadModal({ onClose, onSuccess }: UploadModalProps) {
               onDrop={handleDrop}
               onDragOver={(e) => e.preventDefault()}
               onClick={() => fileInputRef.current?.click()}
-              className='relative border-2 border-dashed border-gray-200 rounded-xl h-40 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-indigo-300 hover:bg-indigo-50/30 transition-colors overflow-hidden'
+              className='relative border-2 border-dashed border-gray-200 rounded-md h-40 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-indigo-300 hover:bg-indigo-50/30 transition-colors overflow-hidden'
             >
               {preview ? (
                 <img src={preview} alt='preview' className='w-full h-full object-cover' />
@@ -284,13 +284,13 @@ function UploadModal({ onClose, onSuccess }: UploadModalProps) {
 
         {/* 푸터 */}
         <div className='px-6 pb-5 flex gap-2'>
-          <button onClick={onClose} className='flex-1 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors'>
+          <button onClick={onClose} className='flex-1 py-2.5 rounded-md border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors'>
             취소
           </button>
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className='flex-1 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2'
+            className='flex-1 py-2.5 rounded-md bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2'
           >
             {loading ? (
               <svg className='w-4 h-4 animate-spin' fill='none' viewBox='0 0 24 24'>
@@ -415,7 +415,7 @@ export default function ConfirmPage() {
         {!isAdmin && (
           <Link
             href='/tasks'
-            className='flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-xl hover:bg-indigo-100 transition-colors border border-indigo-200'
+            className='flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-md hover:bg-indigo-100 transition-colors border border-indigo-200'
           >
             <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
               <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7' />
@@ -434,7 +434,7 @@ export default function ConfirmPage() {
             { label: '반려', value: items.filter((i) => i.status === '반려').length, color: 'text-red-600', bg: 'bg-red-50' },
             { label: '전체', value: items.length, color: 'text-gray-700', bg: 'bg-gray-50' },
           ].map((stat) => (
-            <div key={stat.label} className={`${stat.bg} rounded-xl px-4 py-3`}>
+            <div key={stat.label} className={`${stat.bg} rounded-md px-4 py-3`}>
               <p className='text-xs text-gray-500 mb-1'>{stat.label}</p>
               <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
             </div>
@@ -443,7 +443,7 @@ export default function ConfirmPage() {
       )}
 
       {/* 탭 */}
-      <div className='flex gap-1 bg-gray-100 p-1 rounded-xl w-fit'>
+      <div className='flex gap-1 bg-gray-100 p-1 rounded-md w-fit'>
         {[
           { key: 'pending', label: `컨펌 대기 (${pending.length})` },
           { key: 'done', label: `처리 완료 (${done.length})` },
@@ -451,7 +451,7 @@ export default function ConfirmPage() {
           <button
             key={t.key}
             onClick={() => setTab(t.key as 'pending' | 'done')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors
               ${tab === t.key ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
           >
             {t.label}
@@ -480,7 +480,7 @@ export default function ConfirmPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className='bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group'
+                className='bg-white rounded-md border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group'
                 onClick={() => setReviewItem(item)}
               >
                 {/* 썸네일 */}
@@ -507,7 +507,7 @@ export default function ConfirmPage() {
                   )}
                   {/* 호버 오버레이 */}
                   <div className='absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center'>
-                    <span className='opacity-0 group-hover:opacity-100 bg-white text-gray-800 text-xs font-medium px-3 py-1.5 rounded-lg shadow transition-opacity'>
+                    <span className='opacity-0 group-hover:opacity-100 bg-white text-gray-800 text-xs font-medium px-3 py-1.5 rounded-md shadow transition-opacity'>
                       {isAdmin && item.status === '컨펌대기' ? '검토하기' : '자세히 보기'}
                     </span>
                   </div>
@@ -524,7 +524,7 @@ export default function ConfirmPage() {
                   <p className='text-xs text-gray-400'>{item.designType}</p>
 
                   {item.rejectionNote && (
-                    <div className='mt-3 flex gap-2 bg-red-50 rounded-lg px-3 py-2'>
+                    <div className='mt-3 flex gap-2 bg-red-50 rounded-md px-3 py-2'>
                       <svg className='w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5' fill='currentColor' viewBox='0 0 20 20'>
                         <path fillRule='evenodd' d='M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z' clipRule='evenodd' />
                       </svg>
@@ -674,7 +674,7 @@ function ReviewOverlay({ item, isAdmin, currentUser, onClose, onDecision, onAddP
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.97, opacity: 0 }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className='flex w-full max-w-6xl mx-auto my-4 bg-white rounded-2xl overflow-hidden shadow-2xl'
+        className='flex w-full max-w-6xl mx-auto my-4 bg-white rounded-md overflow-hidden shadow-2xl'
       >
         {/* ── 이미지 영역 ── */}
         <div className='flex-1 flex flex-col bg-gray-950 min-w-0'>
@@ -699,7 +699,7 @@ function ReviewOverlay({ item, isAdmin, currentUser, onClose, onDecision, onAddP
                 <button
                   onClick={toggleShowPins}
                   title={showPins ? '핀 숨기기' : '핀 보기'}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors
                     ${showPins ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' : 'bg-gray-800 text-gray-500 hover:bg-gray-700'}`}
                 >
                   <svg className='w-3.5 h-4' viewBox='0 0 24 30' fill='currentColor'>
@@ -712,7 +712,7 @@ function ReviewOverlay({ item, isAdmin, currentUser, onClose, onDecision, onAddP
               {canInteract && (
                 <button
                   onClick={() => { setPinMode((v) => !v); setNewPinPos(null); }}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors
                     ${pinMode ? 'bg-blue-500 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
                 >
                   <svg className='w-3.5 h-4' viewBox='0 0 24 30' fill='currentColor'>
@@ -736,7 +736,7 @@ function ReviewOverlay({ item, isAdmin, currentUser, onClose, onDecision, onAddP
               {item.imageUrl ? (
                 <img src={item.imageUrl} alt={item.title} className='max-w-full max-h-full object-contain' />
               ) : (
-                <div className='w-150 h-100 bg-linear-to-br from-gray-700 to-gray-800 flex flex-col items-center justify-center gap-3 rounded-lg'>
+                <div className='w-150 h-100 bg-linear-to-br from-gray-700 to-gray-800 flex flex-col items-center justify-center gap-3 rounded-md'>
                   <svg className='w-16 h-16 text-gray-500' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                     <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1} d='M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z' />
                   </svg>
@@ -786,7 +786,7 @@ function ReviewOverlay({ item, isAdmin, currentUser, onClose, onDecision, onAddP
                   <motion.div
                     initial={{ opacity: 0, y: 4 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className='absolute z-30 bg-white rounded-xl shadow-xl p-3 w-60'
+                    className='absolute z-30 bg-white rounded-md shadow-xl p-3 w-60'
                     style={{ left: `${pin.x}%`, top: `${pin.y}%`, transform: 'translate(-50%, calc(-100% - 44px))' }}
                     onClick={(e) => e.stopPropagation()}
                   >
@@ -807,13 +807,13 @@ function ReviewOverlay({ item, isAdmin, currentUser, onClose, onDecision, onAddP
                       <div className='mt-2 flex gap-1.5'>
                         <button
                           onClick={() => { onResolvePin(item._id, pin._id); setActivePinId(null); }}
-                          className='flex-1 text-xs py-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors font-medium'
+                          className='flex-1 text-xs py-1.5 rounded-md bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors font-medium'
                         >
                           해결됨
                         </button>
                         <button
                           onClick={() => { onDeletePin(item._id, pin._id); setActivePinId(null); }}
-                          className='flex-1 text-xs py-1.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors font-medium'
+                          className='flex-1 text-xs py-1.5 rounded-md bg-red-50 text-red-500 hover:bg-red-100 transition-colors font-medium'
                         >
                           핀 삭제
                         </button>
@@ -844,10 +844,10 @@ function ReviewOverlay({ item, isAdmin, currentUser, onClose, onDecision, onAddP
                   onChange={(e) => setNewPinComment(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') handleSavePin(); if (e.key === 'Escape') setNewPinPos(null); }}
                   placeholder='피드백을 입력하세요 (Enter 저장, Esc 취소)'
-                  className='flex-1 bg-gray-800 text-white text-sm px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500'
+                  className='flex-1 bg-gray-800 text-white text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500'
                 />
-                <button onClick={handleSavePin} className='px-3 py-2 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition'>저장</button>
-                <button onClick={() => setNewPinPos(null)} className='px-3 py-2 bg-gray-700 text-gray-300 text-xs font-medium rounded-lg hover:bg-gray-600 transition'>취소</button>
+                <button onClick={handleSavePin} className='px-3 py-2 bg-blue-600 text-white text-xs font-medium rounded-md hover:bg-blue-700 transition'>저장</button>
+                <button onClick={() => setNewPinPos(null)} className='px-3 py-2 bg-gray-700 text-gray-300 text-xs font-medium rounded-md hover:bg-gray-600 transition'>취소</button>
               </motion.div>
             )}
           </AnimatePresence>
@@ -938,14 +938,14 @@ function ReviewOverlay({ item, isAdmin, currentUser, onClose, onDecision, onAddP
                     value={rejectionNote}
                     onChange={(e) => setRejectionNote(e.target.value)}
                     placeholder='수정 요청 사항을 입력하세요...'
-                    className='w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 resize-none'
+                    className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 resize-none'
                   />
                   <div className='flex gap-2'>
-                    <button onClick={() => setShowRejectConfirm(false)} className='flex-1 py-2 rounded-xl border border-gray-200 text-xs text-gray-600 hover:bg-gray-50'>취소</button>
+                    <button onClick={() => setShowRejectConfirm(false)} className='flex-1 py-2 rounded-md border border-gray-200 text-xs text-gray-600 hover:bg-gray-50'>취소</button>
                     <button
                       onClick={() => onDecision(item._id, '반려', rejectionNote)}
                       disabled={!rejectionNote.trim()}
-                      className='flex-1 py-2 rounded-xl bg-red-600 text-white text-xs font-medium hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed transition'
+                      className='flex-1 py-2 rounded-md bg-red-600 text-white text-xs font-medium hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed transition'
                     >
                       반려 확정
                     </button>
@@ -960,7 +960,7 @@ function ReviewOverlay({ item, isAdmin, currentUser, onClose, onDecision, onAddP
                   </p>
                   <button
                     onClick={handleApprove}
-                    className='w-full py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition flex items-center justify-center gap-2'
+                    className='w-full py-2.5 rounded-md bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition flex items-center justify-center gap-2'
                   >
                     <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                       <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2.5} d='M5 13l4 4L19 7' />
@@ -969,7 +969,7 @@ function ReviewOverlay({ item, isAdmin, currentUser, onClose, onDecision, onAddP
                   </button>
                   <button
                     onClick={() => setShowRejectConfirm(true)}
-                    className='w-full py-2.5 rounded-xl border-2 border-red-200 text-red-600 text-sm font-semibold hover:bg-red-50 transition flex items-center justify-center gap-2'
+                    className='w-full py-2.5 rounded-md border-2 border-red-200 text-red-600 text-sm font-semibold hover:bg-red-50 transition flex items-center justify-center gap-2'
                   >
                     <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                       <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2.5} d='M6 18L18 6M6 6l12 12' />
@@ -1064,7 +1064,7 @@ function PinCommentCard({ pin, index, isActive, canResolve, resolved, onClick, o
     <motion.div
       layout
       onClick={onClick}
-      className={`p-3 rounded-xl border cursor-pointer transition-all
+      className={`p-3 rounded-md border cursor-pointer transition-all
         ${resolved ? 'border-gray-100 bg-gray-50 opacity-60' : isActive ? 'border-blue-200 bg-blue-50' : 'border-gray-100 hover:border-gray-200 bg-white'}`}
     >
       <div className='flex items-start gap-2'>
@@ -1080,7 +1080,7 @@ function PinCommentCard({ pin, index, isActive, canResolve, resolved, onClick, o
       {canResolve && !resolved && (
         <button
           onClick={(e) => { e.stopPropagation(); onResolve(); }}
-          className='mt-2 w-full text-xs py-1 rounded-lg bg-gray-100 text-gray-500 hover:bg-emerald-50 hover:text-emerald-600 transition-colors font-medium'
+          className='mt-2 w-full text-xs py-1 rounded-md bg-gray-100 text-gray-500 hover:bg-emerald-50 hover:text-emerald-600 transition-colors font-medium'
         >
           해결됨
         </button>

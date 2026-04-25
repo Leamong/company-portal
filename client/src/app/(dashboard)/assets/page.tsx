@@ -49,10 +49,10 @@ export default function AssetsPage() {
       </div>
 
       {/* 탭 */}
-      <div className="flex gap-1 bg-gray-100 p-1 rounded-xl w-fit">
+      <div className="flex gap-1 bg-gray-100 p-1 rounded-md w-fit">
         {(['로고', '색상', '폰트', '용어사전'] as AssetTab[]).map((t) => (
           <button key={t} onClick={() => setTab(t)}
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors
               ${tab === t ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>
             {t}
           </button>
@@ -67,10 +67,10 @@ export default function AssetsPage() {
             { name: '메인 로고 (화이트)', bg: 'bg-blue-700', textColor: 'text-white' },
             { name: '심볼 마크', bg: 'bg-gray-50 border', textColor: 'text-gray-800' },
           ].map((logo) => (
-            <div key={logo.name} className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <div key={logo.name} className="bg-white rounded-md border border-gray-100 overflow-hidden">
               <div className={`h-44 ${logo.bg} flex items-center justify-center`}>
                 <div className="flex items-center gap-2">
-                  <div className={`w-10 h-10 rounded-xl ${logo.bg.includes('blue') ? 'bg-white/20' : 'bg-blue-600'} flex items-center justify-center`}>
+                  <div className={`w-10 h-10 rounded-md ${logo.bg.includes('blue') ? 'bg-white/20' : 'bg-blue-600'} flex items-center justify-center`}>
                     <span className={`${logo.bg.includes('blue') ? 'text-white' : 'text-white'} font-bold text-lg`}>C</span>
                   </div>
                   <span className={`font-bold text-xl ${logo.textColor}`}>Company</span>
@@ -89,7 +89,7 @@ export default function AssetsPage() {
       {tab === '색상' && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {BRAND_COLORS.map((color) => (
-            <div key={color.hex} className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <div key={color.hex} className="bg-white rounded-md border border-gray-100 overflow-hidden">
               <div className="h-24 w-full" style={{ backgroundColor: color.hex, border: color.hex === '#FFFFFF' ? '1px solid #E5E7EB' : 'none' }} />
               <div className="p-3">
                 <p className="text-sm font-semibold text-gray-800">{color.name}</p>
@@ -113,12 +113,12 @@ export default function AssetsPage() {
       {/* 폰트 */}
       {tab === '폰트' && (
         <div className="space-y-4">
-          <div className="bg-blue-50 rounded-2xl p-4 text-sm text-blue-700 flex items-center gap-2">
+          <div className="bg-blue-50 rounded-md p-4 text-sm text-blue-700 flex items-center gap-2">
             <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
             공식 서체: <strong>Pretendard</strong> — 모든 UI 및 인쇄물에 사용
           </div>
           {FONTS.map((font) => (
-            <div key={font.weight} className="bg-white rounded-2xl border border-gray-100 p-6">
+            <div key={font.weight} className="bg-white rounded-md border border-gray-100 p-6">
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <p className="text-sm font-semibold text-gray-800">{font.name} {font.weight}</p>
@@ -137,9 +137,9 @@ export default function AssetsPage() {
       {tab === '용어사전' && (
         <div className="space-y-3">
           {GLOSSARY.map((item) => (
-            <div key={item.term} className="bg-white rounded-2xl border border-gray-100 p-5 flex gap-4">
+            <div key={item.term} className="bg-white rounded-md border border-gray-100 p-5 flex gap-4">
               <div className="shrink-0">
-                <span className="inline-block bg-blue-100 text-blue-600 text-xs font-semibold px-2.5 py-1 rounded-lg">{item.category}</span>
+                <span className="inline-block bg-blue-100 text-blue-600 text-xs font-semibold px-2.5 py-1 rounded-md">{item.category}</span>
               </div>
               <div>
                 <p className="text-sm font-bold text-gray-900 mb-1">{item.term}</p>

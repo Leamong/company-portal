@@ -30,7 +30,7 @@ function FixedTooltip({ label, desc, color, icon }: { label: string; desc: strin
             transform: 'translate(-50%, -100%)',
             zIndex: 9999,
           }}
-          className='pointer-events-none bg-gray-800 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap shadow-lg'
+          className='pointer-events-none bg-gray-800 text-white text-xs rounded-md px-3 py-2 whitespace-nowrap shadow-lg'
         >
           {desc}
           <div className='absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800' />
@@ -321,7 +321,7 @@ export default function PermissionsPage() {
       </div>
 
       {/* 안내 배너 */}
-      <div className='bg-amber-50 border border-amber-100 rounded-2xl p-4 flex items-start gap-3'>
+      <div className='bg-amber-50 border border-amber-100 rounded-md p-4 flex items-start gap-3'>
         <svg className='w-5 h-5 text-amber-500 shrink-0 mt-0.5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
           <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.8} d='M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z' />
         </svg>
@@ -345,7 +345,7 @@ export default function PermissionsPage() {
           const count = employees.filter((e) => e.role !== 'head-admin' && e[def.key]).length;
           const holders = employees.filter((e) => e.role !== 'head-admin' && e[def.key]);
           return (
-            <div key={def.key} className='bg-white rounded-2xl border border-gray-100 p-4'>
+            <div key={def.key} className='bg-white rounded-md border border-gray-100 p-4'>
               <div className='flex items-center gap-2 mb-2'>
                 <span className={def.color}>{def.icon}</span>
                 <span className='text-sm font-semibold text-gray-800'>{def.label}</span>
@@ -372,7 +372,7 @@ export default function PermissionsPage() {
 
       {/* 필터 & 검색 */}
       <div className='flex flex-col sm:flex-row gap-3'>
-        <div className='flex gap-1 bg-gray-100 p-1 rounded-xl w-fit'>
+        <div className='flex gap-1 bg-gray-100 p-1 rounded-md w-fit'>
           {[
             { key: 'all', label: '전체' },
             { key: 'marketing', label: '마케팅' },
@@ -382,7 +382,7 @@ export default function PermissionsPage() {
             <button
               key={f.key}
               onClick={() => setDeptFilter(f.key)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors
                 ${deptFilter === f.key ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
             >
               {f.label}
@@ -398,7 +398,7 @@ export default function PermissionsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder='이름 또는 이메일 검색'
-            className='w-full pl-8 pr-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500'
+            className='w-full pl-8 pr-3 py-1.5 rounded-md border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
         </div>
       </div>
@@ -409,7 +409,7 @@ export default function PermissionsPage() {
           <div className='w-7 h-7 border-2 border-blue-600 border-t-transparent rounded-full animate-spin' />
         </div>
       ) : (
-        <div className='bg-white rounded-2xl border border-gray-100 overflow-x-auto'>
+        <div className='bg-white rounded-md border border-gray-100 overflow-x-auto'>
           <table className='w-full text-sm min-w-[800px]'>
             <thead>
               <tr className='bg-gray-50 border-b border-gray-100'>

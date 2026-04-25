@@ -58,7 +58,7 @@ export default function AttendanceSettingsPage() {
       </div>
 
       {saved && (
-        <div className='p-3 bg-green-50 rounded-xl flex items-center gap-2 text-sm text-green-700'>
+        <div className='p-3 bg-green-50 rounded-md flex items-center gap-2 text-sm text-green-700'>
           <svg className='w-4 h-4 shrink-0' fill='currentColor' viewBox='0 0 20 20'>
             <path fillRule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z' clipRule='evenodd' />
           </svg>
@@ -69,7 +69,7 @@ export default function AttendanceSettingsPage() {
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-5'>
 
         {/* 기본 근무 시간 */}
-        <div className='bg-white rounded-2xl border border-gray-100 p-6'>
+        <div className='bg-white rounded-md border border-gray-100 p-6'>
           <h2 className='text-base font-bold text-gray-900 mb-5 flex items-center gap-2'>
             <span className='text-xl'>🕐</span> 기본 근무 시간
           </h2>
@@ -81,7 +81,7 @@ export default function AttendanceSettingsPage() {
                   type='time'
                   value={workStart}
                   onChange={(e) => setWorkStart(e.target.value)}
-                  className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
                 />
               </div>
               <div>
@@ -90,7 +90,7 @@ export default function AttendanceSettingsPage() {
                   type='time'
                   value={workEnd}
                   onChange={(e) => setWorkEnd(e.target.value)}
-                  className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
                 />
               </div>
             </div>
@@ -101,7 +101,7 @@ export default function AttendanceSettingsPage() {
                   type='time'
                   value={lunchStart}
                   onChange={(e) => setLunchStart(e.target.value)}
-                  className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
                 />
               </div>
               <div>
@@ -110,11 +110,11 @@ export default function AttendanceSettingsPage() {
                   type='time'
                   value={lunchEnd}
                   onChange={(e) => setLunchEnd(e.target.value)}
-                  className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
                 />
               </div>
             </div>
-            <div className='bg-blue-50 rounded-xl p-3 text-xs text-blue-600'>
+            <div className='bg-blue-50 rounded-md p-3 text-xs text-blue-600'>
               실 근무 시간: {workStart} ~ {workEnd} (점심 제외 {
                 (() => {
                   const [sh, sm] = workStart.split(':').map(Number);
@@ -132,7 +132,7 @@ export default function AttendanceSettingsPage() {
         </div>
 
         {/* 지각/초과근무 기준 */}
-        <div className='bg-white rounded-2xl border border-gray-100 p-6'>
+        <div className='bg-white rounded-md border border-gray-100 p-6'>
           <h2 className='text-base font-bold text-gray-900 mb-5 flex items-center gap-2'>
             <span className='text-xl'>⚠️</span> 지각 · 초과근무 기준
           </h2>
@@ -147,7 +147,7 @@ export default function AttendanceSettingsPage() {
                   value={lateThreshold}
                   onChange={(e) => setLateThreshold(e.target.value)}
                   min='1' max='60'
-                  className='w-24 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  className='w-24 px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
                 />
                 <span className='text-sm text-gray-500'>분 초과 시 지각 처리</span>
               </div>
@@ -168,7 +168,7 @@ export default function AttendanceSettingsPage() {
                   value={weeklyMax}
                   onChange={(e) => setWeeklyMax(e.target.value)}
                   min='40' max='68'
-                  className='w-24 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  className='w-24 px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
                 />
                 <span className='text-sm text-gray-500'>시간 (법정 최대 52h)</span>
               </div>
@@ -177,7 +177,7 @@ export default function AttendanceSettingsPage() {
         </div>
 
         {/* 연차 정책 */}
-        <div className='bg-white rounded-2xl border border-gray-100 p-6'>
+        <div className='bg-white rounded-md border border-gray-100 p-6'>
           <h2 className='text-base font-bold text-gray-900 mb-5 flex items-center gap-2'>
             <span className='text-xl'>🌴</span> 연차 정책
           </h2>
@@ -190,7 +190,7 @@ export default function AttendanceSettingsPage() {
                   value={annualDays}
                   onChange={(e) => setAnnualDays(e.target.value)}
                   min='10' max='30'
-                  className='w-24 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  className='w-24 px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
                 />
                 <span className='text-sm text-gray-500'>일</span>
               </div>
@@ -215,7 +215,7 @@ export default function AttendanceSettingsPage() {
         </div>
 
         {/* 출퇴근 체크 방식 */}
-        <div className='bg-white rounded-2xl border border-gray-100 p-6'>
+        <div className='bg-white rounded-md border border-gray-100 p-6'>
           <h2 className='text-base font-bold text-gray-900 mb-5 flex items-center gap-2'>
             <span className='text-xl'>📍</span> 출퇴근 체크 방식
           </h2>
@@ -253,7 +253,7 @@ export default function AttendanceSettingsPage() {
             </div>
 
             {ipRestriction && (
-              <div className='bg-yellow-50 rounded-xl p-3 text-xs text-yellow-700'>
+              <div className='bg-yellow-50 rounded-md p-3 text-xs text-yellow-700'>
                 <p className='font-medium mb-1'>IP 제한 설정 안내</p>
                 <p>허용 IP는 서버의 ALLOWED_IPS 환경변수 또는 어드민 IP 관리 페이지에서 설정하세요.</p>
               </div>
@@ -267,7 +267,7 @@ export default function AttendanceSettingsPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className='px-6 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 disabled:opacity-60 transition-colors'
+          className='px-6 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 disabled:opacity-60 transition-colors'
         >
           {saving ? '저장 중...' : '설정 저장'}
         </button>

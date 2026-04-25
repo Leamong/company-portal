@@ -181,7 +181,7 @@ function EventModal({ date, event, groups, onClose, onSave, onDelete }: ModalPro
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4' onClick={onClose}>
       <div
-        className='bg-white rounded-2xl shadow-2xl w-full max-w-md p-6'
+        className='bg-white rounded-md shadow-2xl w-full max-w-md p-6'
         onClick={(e) => e.stopPropagation()}
       >
         <div className='flex items-center justify-between mb-5'>
@@ -221,7 +221,7 @@ function EventModal({ date, event, groups, onClose, onSave, onDelete }: ModalPro
                 type='date'
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className='w-full text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300'
+                className='w-full text-sm border border-gray-200 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300'
               />
             </div>
             <div>
@@ -231,7 +231,7 @@ function EventModal({ date, event, groups, onClose, onSave, onDelete }: ModalPro
                 value={endDate}
                 min={startDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className='w-full text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300'
+                className='w-full text-sm border border-gray-200 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300'
               />
             </div>
           </div>
@@ -244,7 +244,7 @@ function EventModal({ date, event, groups, onClose, onSave, onDelete }: ModalPro
                   type='time'
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
-                  className='w-full text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300'
+                  className='w-full text-sm border border-gray-200 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300'
                 />
               </div>
               <div>
@@ -253,7 +253,7 @@ function EventModal({ date, event, groups, onClose, onSave, onDelete }: ModalPro
                   type='time'
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
-                  className='w-full text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300'
+                  className='w-full text-sm border border-gray-200 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300'
                 />
               </div>
             </div>
@@ -264,7 +264,7 @@ function EventModal({ date, event, groups, onClose, onSave, onDelete }: ModalPro
             <select
               value={calId}
               onChange={(e) => setCalId(e.target.value)}
-              className='w-full text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300'
+              className='w-full text-sm border border-gray-200 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300'
             >
               {groups.map((g) => (
                 <option key={g.id} value={g.id}>{g.name}</option>
@@ -277,7 +277,7 @@ function EventModal({ date, event, groups, onClose, onSave, onDelete }: ModalPro
               <button
                 type='button'
                 onClick={() => { onDelete(event.id); onClose(); }}
-                className='px-4 py-2 text-sm text-red-500 hover:bg-red-50 rounded-xl transition-colors'
+                className='px-4 py-2 text-sm text-red-500 hover:bg-red-50 rounded-md transition-colors'
               >
                 삭제
               </button>
@@ -286,13 +286,13 @@ function EventModal({ date, event, groups, onClose, onSave, onDelete }: ModalPro
               <button
                 type='button'
                 onClick={onClose}
-                className='px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-xl transition-colors'
+                className='px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md transition-colors'
               >
                 취소
               </button>
               <button
                 type='submit'
-                className='px-5 py-2 text-sm font-semibold bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition-colors'
+                className='px-5 py-2 text-sm font-semibold bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors'
               >
                 저장
               </button>
@@ -646,7 +646,7 @@ function WeekView({ currentDate, visibleEvents, onEventClick, onDayClick }: Week
                   <div
                     key={evt.id}
                     onClick={(e) => { e.stopPropagation(); onEventClick(evt); }}
-                    className={`${evt.colorClass} text-white text-[11px] rounded-lg px-1.5 py-0.5 mb-0.5 truncate cursor-pointer hover:opacity-80`}
+                    className={`${evt.colorClass} text-white text-[11px] rounded-md px-1.5 py-0.5 mb-0.5 truncate cursor-pointer hover:opacity-80`}
                   >
                     {evt.startTime} {evt.title}
                   </div>
@@ -693,7 +693,7 @@ function DayView({ currentDate, visibleEvents, onEventClick }: DayViewProps) {
             <div
               key={evt.id}
               onClick={() => onEventClick(evt)}
-              className={`${evt.colorClass} text-white text-sm px-3 py-1.5 rounded-xl cursor-pointer hover:opacity-80 transition-opacity`}
+              className={`${evt.colorClass} text-white text-sm px-3 py-1.5 rounded-md cursor-pointer hover:opacity-80 transition-opacity`}
             >
               {evt.title}
             </div>
@@ -717,7 +717,7 @@ function DayView({ currentDate, visibleEvents, onEventClick }: DayViewProps) {
                 <div
                   key={evt.id}
                   onClick={() => onEventClick(evt)}
-                  className={`${evt.colorClass} text-white text-sm px-3 py-1 rounded-xl cursor-pointer hover:opacity-80 transition-opacity`}
+                  className={`${evt.colorClass} text-white text-sm px-3 py-1 rounded-md cursor-pointer hover:opacity-80 transition-opacity`}
                 >
                   <span className='font-semibold'>{evt.startTime}</span>
                   {evt.endTime ? ` ~ ${evt.endTime}` : ''} {evt.title}
@@ -786,7 +786,7 @@ function ListView({ visibleEvents, groups, onEventClick }: ListViewProps) {
                 <div
                   key={evt.id}
                   onClick={() => onEventClick(evt)}
-                  className='flex items-center gap-2.5 p-2.5 rounded-xl bg-white border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all cursor-pointer'
+                  className='flex items-center gap-2.5 p-2.5 rounded-md bg-white border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all cursor-pointer'
                 >
                   <div className={`w-2.5 h-2.5 rounded-full shrink-0 ${evt.colorClass}`} />
                   <div className='flex-1 min-w-0'>
@@ -849,7 +849,7 @@ function GroupList({
             key={g.id}
             type='button'
             onClick={() => onToggle(g.id)}
-            className='flex items-center gap-2 px-1 py-1 rounded-lg hover:bg-gray-50 cursor-pointer w-full text-left'
+            className='flex items-center gap-2 px-1 py-1 rounded-md hover:bg-gray-50 cursor-pointer w-full text-left'
           >
             <div
               className={`w-3.5 h-3.5 rounded flex items-center justify-center shrink-0 transition-colors ${g.checked ? g.colorClass : 'bg-gray-200'}`}
@@ -951,7 +951,7 @@ export default function CalendarPage() {
         <div className='p-4 shrink-0'>
           <button
             onClick={() => openCreate(TODAY_STR)}
-            className='w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-orange-500 text-white text-sm font-semibold rounded-xl hover:bg-orange-600 transition-colors shadow-sm'
+            className='w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-orange-500 text-white text-sm font-semibold rounded-md hover:bg-orange-600 transition-colors shadow-sm'
           >
             <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
               <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 4v16m8-8H4' />
@@ -990,17 +990,17 @@ export default function CalendarPage() {
           <div className='flex items-center gap-2 min-w-0'>
             <button
               onClick={goToday}
-              className='hidden sm:block px-3 py-1.5 text-sm font-medium border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors text-gray-600 shrink-0'
+              className='hidden sm:block px-3 py-1.5 text-sm font-medium border border-gray-200 rounded-md hover:bg-gray-50 transition-colors text-gray-600 shrink-0'
             >
               오늘
             </button>
             <div className='flex items-center shrink-0'>
-              <button onClick={prev} className='p-1.5 hover:bg-gray-100 rounded-lg transition-colors'>
+              <button onClick={prev} className='p-1.5 hover:bg-gray-100 rounded-md transition-colors'>
                 <svg className='w-4 h-4 text-gray-500' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                   <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 19l-7-7 7-7' />
                 </svg>
               </button>
-              <button onClick={next} className='p-1.5 hover:bg-gray-100 rounded-lg transition-colors'>
+              <button onClick={next} className='p-1.5 hover:bg-gray-100 rounded-md transition-colors'>
                 <svg className='w-4 h-4 text-gray-500' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                   <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
                 </svg>
@@ -1009,13 +1009,13 @@ export default function CalendarPage() {
             <h2 className='text-base sm:text-lg font-bold text-gray-800 truncate'>{headerTitle}</h2>
           </div>
 
-          <div className='flex items-center gap-1 bg-gray-100 p-1 rounded-xl shrink-0'>
+          <div className='flex items-center gap-1 bg-gray-100 p-1 rounded-md shrink-0'>
             {(['month', 'week', 'day', 'list'] as CalView[]).map((v) => (
               <button
                 key={v}
                 onClick={() => setView(v)}
                 className={[
-                  'px-2 sm:px-3 py-1.5 text-xs font-medium rounded-lg transition-colors',
+                  'px-2 sm:px-3 py-1.5 text-xs font-medium rounded-md transition-colors',
                   view === v ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700',
                 ].join(' ')}
               >
@@ -1029,7 +1029,7 @@ export default function CalendarPage() {
         <div className='md:hidden px-4 py-2 border-b border-gray-100 shrink-0'>
           <button
             onClick={() => openCreate(TODAY_STR)}
-            className='flex items-center gap-2 px-4 py-2 bg-orange-500 text-white text-sm font-semibold rounded-xl hover:bg-orange-600 transition-colors'
+            className='flex items-center gap-2 px-4 py-2 bg-orange-500 text-white text-sm font-semibold rounded-md hover:bg-orange-600 transition-colors'
           >
             <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
               <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 4v16m8-8H4' />

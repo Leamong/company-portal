@@ -156,7 +156,7 @@ export default function CrmPage() {
         </div>
         <button
           onClick={() => setShowClientModal({ open: true, mode: 'create' })}
-          className='flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition'
+          className='flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition'
         >
           <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
             <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 4v16m8-8H4' />
@@ -177,7 +177,7 @@ export default function CrmPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder='고객사명, 담당자, 업종 검색'
-              className='w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='w-full pl-9 pr-4 py-2.5 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
           </div>
 
@@ -192,7 +192,7 @@ export default function CrmPage() {
               <p className='text-sm'>등록된 고객사가 없습니다.</p>
             </div>
           ) : (
-            <div className='bg-white rounded-2xl border border-gray-100 overflow-hidden'>
+            <div className='bg-white rounded-md border border-gray-100 overflow-hidden'>
               {clients.map((client, i) => (
                 <button
                   key={client._id}
@@ -203,7 +203,7 @@ export default function CrmPage() {
                     i !== 0 ? 'border-t border-gray-50' : '',
                   ].join(' ')}
                 >
-                  <div className='w-10 h-10 rounded-xl bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center shrink-0'>
+                  <div className='w-10 h-10 rounded-md bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center shrink-0'>
                     <span className='text-white text-sm font-bold'>{client.name.charAt(0)}</span>
                   </div>
                   <div className='flex-1 min-w-0'>
@@ -230,10 +230,10 @@ export default function CrmPage() {
         {selected && (
           <div className='w-1/2 space-y-4'>
             {/* 고객사 정보 카드 */}
-            <div className='bg-white rounded-2xl border border-gray-100 p-5'>
+            <div className='bg-white rounded-md border border-gray-100 p-5'>
               <div className='flex items-start justify-between mb-4'>
                 <div className='flex items-center gap-3'>
-                  <div className='w-10 h-10 rounded-xl bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center shrink-0'>
+                  <div className='w-10 h-10 rounded-md bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center shrink-0'>
                     <span className='text-white text-sm font-bold'>{selected.name.charAt(0)}</span>
                   </div>
                   <div>
@@ -246,7 +246,7 @@ export default function CrmPage() {
                 <div className='flex items-center gap-1'>
                   <button
                     onClick={() => setShowClientModal({ open: true, mode: 'edit', client: selected })}
-                    className='p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition'
+                    className='p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition'
                     title='수정'
                   >
                     <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
@@ -256,7 +256,7 @@ export default function CrmPage() {
                   {isAdmin && (
                     <button
                       onClick={() => handleClientDelete(selected._id)}
-                      className='p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition'
+                      className='p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition'
                       title='삭제'
                     >
                       <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
@@ -266,7 +266,7 @@ export default function CrmPage() {
                   )}
                   <button
                     onClick={() => setSelected(null)}
-                    className='p-1.5 text-gray-400 hover:text-gray-600 rounded-lg transition'
+                    className='p-1.5 text-gray-400 hover:text-gray-600 rounded-md transition'
                   >
                     <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                       <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M6 18L18 6M6 6l12 12' />
@@ -300,7 +300,7 @@ export default function CrmPage() {
             </div>
 
             {/* 상담 히스토리 */}
-            <div className='bg-white rounded-2xl border border-gray-100 p-5'>
+            <div className='bg-white rounded-md border border-gray-100 p-5'>
               <div className='flex items-center justify-between mb-4'>
                 <h3 className='text-sm font-semibold text-gray-800'>상담 히스토리</h3>
                 <span className='text-xs text-gray-400'>{consultations.length}건</span>
@@ -345,7 +345,7 @@ export default function CrmPage() {
 
               <button
                 onClick={() => setShowConsultModal(true)}
-                className='w-full mt-4 py-2 rounded-lg border border-dashed border-gray-200 text-xs text-gray-400 hover:border-blue-300 hover:text-blue-500 transition flex items-center justify-center gap-1'
+                className='w-full mt-4 py-2 rounded-md border border-dashed border-gray-200 text-xs text-gray-400 hover:border-blue-300 hover:text-blue-500 transition flex items-center justify-center gap-1'
               >
                 <svg className='w-3.5 h-3.5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                   <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 4v16m8-8H4' />
@@ -424,7 +424,7 @@ function ClientModal({
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4'>
-      <div className='bg-white rounded-2xl shadow-xl w-full max-w-md'>
+      <div className='bg-white rounded-md shadow-xl w-full max-w-md'>
         <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100'>
           <h2 className='text-base font-bold text-gray-900'>
             {mode === 'create' ? '고객사 등록' : '고객사 수정'}
@@ -443,7 +443,7 @@ function ClientModal({
               value={form.name}
               onChange={set('name')}
               placeholder='(주)회사명'
-              className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
           </div>
 
@@ -454,7 +454,7 @@ function ClientModal({
                 value={form.contact}
                 onChange={set('contact')}
                 placeholder='홍길동'
-                className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
               />
             </div>
             <div>
@@ -463,7 +463,7 @@ function ClientModal({
                 value={form.phone}
                 onChange={set('phone')}
                 placeholder='010-0000-0000'
-                className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
               />
             </div>
           </div>
@@ -475,7 +475,7 @@ function ClientModal({
                 value={form.email}
                 onChange={set('email')}
                 placeholder='example@company.com'
-                className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
               />
             </div>
             <div>
@@ -484,7 +484,7 @@ function ClientModal({
                 value={form.industry}
                 onChange={set('industry')}
                 placeholder='예) 마케팅, IT'
-                className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
               />
             </div>
           </div>
@@ -495,7 +495,7 @@ function ClientModal({
               <select
                 value={form.status}
                 onChange={set('status')}
-                className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white'
+                className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white'
               >
                 <option value='활성'>활성</option>
                 <option value='대기'>대기</option>
@@ -509,7 +509,7 @@ function ClientModal({
                 min={0}
                 value={form.totalOrders}
                 onChange={set('totalOrders')}
-                className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
               />
             </div>
           </div>
@@ -521,7 +521,7 @@ function ClientModal({
               onChange={set('notes')}
               placeholder='특이사항, 계약 조건 등'
               rows={3}
-              className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none'
+              className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none'
             />
           </div>
 
@@ -531,14 +531,14 @@ function ClientModal({
             <button
               type='button'
               onClick={onClose}
-              className='flex-1 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition'
+              className='flex-1 py-2.5 rounded-md border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition'
             >
               취소
             </button>
             <button
               type='submit'
               disabled={loading}
-              className='flex-1 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition'
+              className='flex-1 py-2.5 rounded-md bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition'
             >
               {loading ? '저장 중...' : mode === 'create' ? '등록' : '저장'}
             </button>
@@ -583,7 +583,7 @@ function ConsultationModal({
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4'>
-      <div className='bg-white rounded-2xl shadow-xl w-full max-w-sm'>
+      <div className='bg-white rounded-md shadow-xl w-full max-w-sm'>
         <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100'>
           <h2 className='text-base font-bold text-gray-900'>상담 기록 추가</h2>
           <button onClick={onClose} className='text-gray-400 hover:text-gray-600'>
@@ -601,7 +601,7 @@ function ConsultationModal({
                 type='date'
                 value={form.date}
                 onChange={(e) => setForm((p) => ({ ...p, date: e.target.value }))}
-                className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
               />
             </div>
             <div>
@@ -609,7 +609,7 @@ function ConsultationModal({
               <select
                 value={form.type}
                 onChange={(e) => setForm((p) => ({ ...p, type: e.target.value as Consultation['type'] }))}
-                className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white'
+                className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white'
               >
                 <option value='미팅'>미팅</option>
                 <option value='전화'>전화</option>
@@ -626,7 +626,7 @@ function ConsultationModal({
               onChange={(e) => setForm((p) => ({ ...p, memo: e.target.value }))}
               placeholder='상담 내용을 입력하세요'
               rows={4}
-              className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none'
+              className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none'
             />
           </div>
 
@@ -636,14 +636,14 @@ function ConsultationModal({
             <button
               type='button'
               onClick={onClose}
-              className='flex-1 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition'
+              className='flex-1 py-2.5 rounded-md border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition'
             >
               취소
             </button>
             <button
               type='submit'
               disabled={loading}
-              className='flex-1 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition'
+              className='flex-1 py-2.5 rounded-md bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition'
             >
               {loading ? '저장 중...' : '추가'}
             </button>

@@ -69,7 +69,7 @@ export default function TaskModal({ mode, initial, onClose, onSubmit }: Props) {
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-md shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
         {/* 헤더 */}
         <div className="sticky top-0 bg-white rounded-t-2xl flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <div>
@@ -80,7 +80,7 @@ export default function TaskModal({ mode, initial, onClose, onSubmit }: Props) {
               {mode === 'create' ? '주문 정보를 입력하세요' : '수정할 내용을 변경하세요'}
             </p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100">
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1 rounded-md hover:bg-gray-100">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -120,7 +120,7 @@ export default function TaskModal({ mode, initial, onClose, onSubmit }: Props) {
                 type="button"
                 onClick={() => set('priority', '일반')}
                 className={[
-                  'flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium border-2 transition-all',
+                  'flex items-center justify-center gap-2 py-2.5 rounded-md text-sm font-medium border-2 transition-all',
                   form.priority === '일반'
                     ? 'bg-indigo-50 text-indigo-700 border-indigo-400 shadow-sm'
                     : 'bg-white text-gray-400 border-gray-200 hover:border-gray-300',
@@ -135,7 +135,7 @@ export default function TaskModal({ mode, initial, onClose, onSubmit }: Props) {
                 type="button"
                 onClick={() => set('priority', '긴급')}
                 className={[
-                  'flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium border-2 transition-all',
+                  'flex items-center justify-center gap-2 py-2.5 rounded-md text-sm font-medium border-2 transition-all',
                   form.priority === '긴급'
                     ? 'bg-red-50 text-red-600 border-red-400 shadow-sm'
                     : 'bg-white text-gray-400 border-gray-200 hover:border-red-200 hover:text-red-400',
@@ -186,7 +186,7 @@ export default function TaskModal({ mode, initial, onClose, onSubmit }: Props) {
                   type="button"
                   onClick={() => set('designType', t)}
                   className={[
-                    'px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors',
+                    'px-3 py-1.5 rounded-md text-xs font-medium border transition-colors',
                     form.designType === t
                       ? 'bg-indigo-500 text-white border-indigo-500'
                       : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300',
@@ -248,14 +248,14 @@ export default function TaskModal({ mode, initial, onClose, onSubmit }: Props) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+              className="flex-1 py-2.5 rounded-md border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
             >
               취소
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-60"
+              className="flex-1 py-2.5 rounded-md bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-60"
             >
               {loading ? '저장 중...' : mode === 'create' ? '등록하기' : '저장하기'}
             </button>
@@ -267,7 +267,7 @@ export default function TaskModal({ mode, initial, onClose, onSubmit }: Props) {
 }
 
 const inputCls =
-  'w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-shadow';
+  'w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-shadow';
 
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (

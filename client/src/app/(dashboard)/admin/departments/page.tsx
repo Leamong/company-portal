@@ -75,7 +75,7 @@ function DeptModal({
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4'>
-      <div className='bg-white rounded-2xl shadow-xl w-full max-w-sm p-6'>
+      <div className='bg-white rounded-md shadow-xl w-full max-w-sm p-6'>
         <div className='flex items-center justify-between mb-5'>
           <h2 className='text-base font-bold text-gray-900'>
             {isNew ? '부서 추가' : '부서 수정'}
@@ -96,7 +96,7 @@ function DeptModal({
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               placeholder='예) 마케팅팀, 디자인팀'
-              className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
           </div>
 
@@ -137,7 +137,7 @@ function DeptModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder='간략한 부서 설명'
-              className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
           </div>
 
@@ -146,14 +146,14 @@ function DeptModal({
           <div className='flex gap-3 pt-1'>
             <button
               onClick={onClose}
-              className='flex-1 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50'
+              className='flex-1 py-2.5 rounded-md border border-gray-200 text-sm text-gray-600 hover:bg-gray-50'
             >
               취소
             </button>
             <button
               onClick={handleSave}
               disabled={saving}
-              className='flex-1 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-60'
+              className='flex-1 py-2.5 rounded-md bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-60'
             >
               {saving ? '저장 중...' : '저장'}
             </button>
@@ -204,7 +204,7 @@ function PositionModal({
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4'>
-      <div className='bg-white rounded-2xl shadow-xl w-full max-w-sm p-6'>
+      <div className='bg-white rounded-md shadow-xl w-full max-w-sm p-6'>
         <div className='flex items-center justify-between mb-5'>
           <h2 className='text-base font-bold text-gray-900'>
             {position ? '직급 수정' : '직급 추가'}
@@ -223,7 +223,7 @@ function PositionModal({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder='예) 사원, 대리, 과장, 팀장'
-              className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
           </div>
           <div>
@@ -232,7 +232,7 @@ function PositionModal({
               type='number'
               value={level}
               onChange={(e) => setLevel(parseInt(e.target.value) || 0)}
-              className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
           </div>
 
@@ -267,18 +267,18 @@ function PositionModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder='간략한 설명'
-              className='w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
           </div>
           {error && <p className='text-xs text-red-500'>{error}</p>}
           <div className='flex gap-3 pt-1'>
-            <button onClick={onClose} className='flex-1 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50'>
+            <button onClick={onClose} className='flex-1 py-2.5 rounded-md border border-gray-200 text-sm text-gray-600 hover:bg-gray-50'>
               취소
             </button>
             <button
               onClick={handleSave}
               disabled={saving}
-              className='flex-1 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-60'
+              className='flex-1 py-2.5 rounded-md bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-60'
             >
               {saving ? '저장 중...' : '저장'}
             </button>
@@ -415,7 +415,7 @@ export default function DepartmentsPage() {
           </div>
           <button
             onClick={() => setDeptModal({ open: true, editing: null })}
-            className='flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors'
+            className='flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-md hover:bg-blue-700 transition-colors'
           >
             <svg className='w-3.5 h-3.5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
               <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 4v16m8-8H4' />
@@ -429,7 +429,7 @@ export default function DepartmentsPage() {
             <div className='w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin' />
           </div>
         ) : deptStats.length === 0 ? (
-          <div className='bg-white rounded-2xl border border-dashed border-gray-200 py-12 text-center'>
+          <div className='bg-white rounded-md border border-dashed border-gray-200 py-12 text-center'>
             <svg className='w-10 h-10 text-gray-200 mx-auto mb-3' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
               <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' />
             </svg>
@@ -442,7 +442,7 @@ export default function DepartmentsPage() {
               const c = getColorMeta(dept.color);
               const isExpanded = expandedDept === dept._id;
               return (
-                <div key={dept._id} className='bg-white rounded-2xl border border-gray-100 overflow-hidden'>
+                <div key={dept._id} className='bg-white rounded-md border border-gray-100 overflow-hidden'>
                   {/* 카드 헤더 */}
                   <div className={`${c.bg} px-5 py-4`}>
                     <div className='flex items-center justify-between mb-2'>
@@ -536,7 +536,7 @@ export default function DepartmentsPage() {
           </div>
           <button
             onClick={() => setPositionModal({ open: true, editing: null })}
-            className='flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors'
+            className='flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-md hover:bg-blue-700 transition-colors'
           >
             <svg className='w-3.5 h-3.5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
               <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 4v16m8-8H4' />
@@ -550,7 +550,7 @@ export default function DepartmentsPage() {
             <div className='w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin' />
           </div>
         ) : positions.length === 0 ? (
-          <div className='bg-white rounded-2xl border border-dashed border-gray-200 py-12 text-center'>
+          <div className='bg-white rounded-md border border-dashed border-gray-200 py-12 text-center'>
             <svg className='w-10 h-10 text-gray-200 mx-auto mb-3' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
               <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' />
             </svg>
@@ -558,7 +558,7 @@ export default function DepartmentsPage() {
             <p className='text-xs text-gray-300'>직급 추가 버튼을 눌러 직급 체계를 만들어보세요</p>
           </div>
         ) : (
-          <div className='bg-white rounded-2xl border border-gray-100 overflow-hidden'>
+          <div className='bg-white rounded-md border border-gray-100 overflow-hidden'>
             <table className='w-full text-sm'>
               <thead>
                 <tr className='bg-gray-50 border-b border-gray-100'>
